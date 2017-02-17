@@ -2,6 +2,7 @@ UKM=/data/UKM;
 BB=$UKM/busybox;
 DEVICE=`sh $UKM/device/.device.sh`;
 
+
 bool() {
   [ `$BB cat $1` == "Y" ] && $BB echo "1";
   [ `$BB cat $1` == "N" ] && $BB echo "0";
@@ -15,7 +16,21 @@ cat << CTAG
 			$BB echo ','
 			. $UKM/config.json.generate.status
 			$BB echo ','
-			. $UKM/config.json.generate.cpu
+   if [ -d "/sys/module/clock_cpu_8994" ]; then
+			. $UKM/config.json.generate.kryo1
+   else
+   . $UKM/config.json.generate.cpu1
+			$BB echo ','
+   fi
+   if [ -d "/sys/module/clock_cpu_8994" ]; then
+			. $UKM/config.json.generate.kryo2
+			$BB echo ','
+   fi
+   if [ -d "/sys/devices/system/cpu/cpu4" ]; then
+			. $UKM/config.json.generate.cpu2
+			$BB echo ','
+   fi
+            . $UKM/config.json.generate.cpuboost
 			$BB echo ','
 			. $UKM/config.json.generate.hotplug
 			$BB echo ','
