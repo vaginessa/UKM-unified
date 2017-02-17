@@ -16,30 +16,30 @@ cat << CTAG
 			$BB echo ','
 			. $UKM/config.json.generate.status
 			$BB echo ','
-   if [ -d "/sys/module/clock_cpu_8994" ]; then
-			. $UKM/config.json.generate.kryo1
-   else
-   . $UKM/config.json.generate.cpu1
+      if [ -d "/sys/module/clock_cpu_8996" ]; then
+			  . $UKM/config.json.generate.kryo1
+      else
+        . $UKM/config.json.generate.cpu1
 			$BB echo ','
-   fi
-   if [ -d "/sys/module/clock_cpu_8994" ]; then
-			. $UKM/config.json.generate.kryo2
+      fi
+      if [ -d "/sys/module/clock_cpu_8996" ]; then
+			  . $UKM/config.json.generate.kryo2
 			$BB echo ','
-   fi
-   if [ -d "/sys/devices/system/cpu/cpu4" ]; then
+      fi
+      if [ -d "/sys/devices/system/cpu/cpu4" ]; then
 			. $UKM/config.json.generate.cpu2
 			$BB echo ','
-   fi
-            . $UKM/config.json.generate.cpuboost
+      fi
+      . $UKM/config.json.generate.cpuboost
 			$BB echo ','
 			. $UKM/config.json.generate.hotplug
 			$BB echo ','
 			. $UKM/config.json.generate.thermal
 			$BB echo ','
-   if [ -f "/sys/devices/system/cpu/cpufreq/vdd_table/vdd_levels" ]; then
+      if [ -f "/sys/devices/system/cpu/cpufreq/vdd_table/vdd_levels" ]; then
 			. $UKM/config.json.generate.cpuvolt
 			$BB echo ','
-   fi
+      fi
 			. $UKM/config.json.generate.io
 			$BB echo ','
 			. $UKM/config.json.generate.gpu
