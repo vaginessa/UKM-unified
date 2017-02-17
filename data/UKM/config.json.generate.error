@@ -20,6 +20,12 @@ cat << CTAG
 					description:"Created by <a href='http://forum.xda-developers.com/member.php?u=5658634'>apb_axel</a>."
 				}},
 				{ SDescription:{
+					description:"Modified by <a href='https://forum.xda-developers.com/member.php?u=5288056'>yarpiin</a>."
+				}},
+				{ SDescription:{
+					description:"Version 3.8.2 - Unified"
+				}},
+				{ SDescription:{
 					description:"XDA Link: <a href='http://forum.xda-developers.com/android/software/zip-synapse-script-universal-kernel-t2736986'>HERE</a>"
 				}},
 			{ SPane:{
@@ -68,6 +74,18 @@ cat << CTAG
 					es:"Fecha del ROM"
 				},
 				description:"`getprop ro.build.date`"
+			}},
+		{ SPane:{
+			title:"Disclaimer and Fixing",
+			description:"To update/refresh UKM, select Fix Device Not Supported below, if it does not work, probably your device is not supported. You can use the link to UKM to verify this."
+		}},
+			{ SButton:{
+					label:"Fix Device Not Supported",
+					action:"restorebackup restart"
+			}},
+			{ SButton:{
+					label:"UKM Xda Official Thread",
+					action:"devtools ukmxda"
 			}},
 		]
 }
