@@ -15,7 +15,10 @@ cat << CTAG
 					description:"Created by <a href='http://forum.xda-developers.com/member.php?u=5658634'>apb_axel</a>."
 				}},
 				{ SDescription:{
-					description:"Version 3.8.1"
+					description:"Modified by <a href='https://forum.xda-developers.com/member.php?u=5288056'>yarpiin</a>."
+				}},
+				{ SDescription:{
+					description:"Version 3.8.2 - Unified"
 				}},
 				{ SDescription:{
 					description:"XDA Link: <a href='http://forum.xda-developers.com/android/software/zip-synapse-script-universal-kernel-t2736986'>HERE</a>"
