@@ -10,6 +10,11 @@ cat << CTAG
 					style:italic,
 					action:"live GPUFrequency"
 				}},
+				{ SLiveLabel:{
+					refresh:1000,
+					style:italic,
+					action:"live KRYOGPUFrequency"
+				}},
 			{ SPane:{
 				title:"GPU Frequency Scaling",
 			}},
@@ -25,6 +30,18 @@ cat << CTAG
 						}
 					}},'
 				fi`
+				`if [ -f "\`sh $DEVICE DirKRYOGPUMinPwrLevel\`" ]; then
+				GPUMIN=\`sh $DEVICE DirKRYOGPUMinPwrLevel\`
+					$BB echo '{ SSeekBar:{
+						title:"GPU Min Frequency",
+						description:"Set the minimum frequency the GPU scales down to.",
+						default:'\`$BB cat $GPUMIN\`',
+						action:"gpuset '$GPUMIN'",
+						values:{
+							'\`sh $DEVICE GPUKRYOPowerLevel\`'
+						}
+					}},'
+				fi`
 				`if [ -f "\`sh $DEVICE DirGPUMaxFrequency\`" ]; then
 				GPUMAX=\`sh $DEVICE DirGPUMaxFrequency\`
 					$BB echo '{ SSeekBar:{
@@ -35,6 +52,25 @@ cat << CTAG
 						values:{
 							'\`sh $DEVICE GPUFrequencyList\`'
 						}
+				}},'
+				`if [ -f "\`sh $DEVICE DirKRYOGPUMaxFrequency\`" ]; then
+				GPUMAX=\`sh $DEVICE DirKRYOGPUMaxFrequency\`
+					$BB echo '{ SSeekBar:{
+						title:"GPU Max Frequency",
+						description:"Set the maximum frequency the GPU scales up to.",
+						default:'\`$BB cat $GPUMAX\`',
+						action:"generic '$GPUMAX'",
+						values:{
+							'\`sh $DEVICE GPUKRYOFrequencyList\`'
+						}
+				}},'
+					$BB echo '{ SButton:{
+						label:"Enable GPU Gaming Boost",
+						action:"gpuboost enable"
+				}},'
+					$BB echo '{ SButton:{
+						label:"Disable GPU Gaming Boost",
+						action:"gpuboost disable"
 				}},'
 				fi`
 			`if [ -f "\`sh $DEVICE DirGPUGovernor\`" ]; then
@@ -48,6 +84,20 @@ cat << CTAG
 						action:"gpuset '$GPUGOV'",
 						values:[
 							'\`sh $DEVICE GPUGovernorList\`'
+						]
+					}},'
+			fi`
+			`if [ -f "\`sh $DEVICE DirKRYOGPUGovernor\`" ]; then
+			GPUGOV=\`sh $DEVICE DirKRYOGPUGovernor\`
+				$BB echo '{ SPane:{
+					title:"GPU Governor",
+					description:"The GPU Governor makes scaling decisions based on specific algorithm for 2D/3D scenarios."
+				}},
+					{ SOptionList:{
+						default:'\`sh $DEVICE DefaultKRYOGPUGovernor\`',
+						action:"gpuset '$GPUGOV'",
+						values:[
+							'\`sh $DEVICE KRYOGPUGovernorList\`'
 						]
 					}},'
 			fi`
@@ -153,6 +203,59 @@ cat << CTAG
 							fi;
 					done < /sys/devices/system/cpu/cpu0/cpufreq/gpu_mv_table
 			fi`
+			`if [ -f "/sys/devices/soc/b00000.qcom,kgsl-3d0/devfreq/b00000.qcom,kgsl-3d0/adrenoboost" ]; then
+				$BB echo '{ SPane:{
+					title:"Adrenoboost"
+				}},'
+				if [ -f "/sys/devices/soc/b00000.qcom,kgsl-3d0/devfreq/b00000.qcom,kgsl-3d0/adrenoboost" ]; then
+				PSM=\`$BB cat /sys/devices/soc/b00000.qcom,kgsl-3d0/devfreq/b00000.qcom,kgsl-3d0/adrenoboost\`
+					$BB echo '{ SOptionList:{
+						description:"Gpu scaling driver .",
+						default:'$PSM',
+						action:"generic /sys/devices/soc/b00000.qcom,kgsl-3d0/devfreq/b00000.qcom,kgsl-3d0/adrenoboost",
+						values:{
+							0:"Off", 1:"Low",2:"Medium", 3:"Agressive",
+						}
+					}},'
+				fi
+            fi`
+			`if [ -f "/sys/module/adreno_idler/parameters/adreno_idler_active" ]; then
+				IDLER=\`bool /sys/module/adreno_idler/parameters/adreno_idler_active\`
+				IDLELOC=/sys/module/adreno_idler/parameters;
+					$BB echo '{ SPane:{
+						title:"Adreno_Idler Tunables"
+					}},
+						{ SCheckBox:{
+							label:"Enable",
+							description:"An add-on for MSM Adreno TZ GPU Governor. Developed by arter97.",
+							default:'$IDLER',
+							action:"boolean /sys/module/adreno_idler/parameters/adreno_idler_active"
+						}},
+						{ SSpacer:{
+							height: 1
+						}},'
+						$BB echo '{ SGeneric:{
+							title:"Down Differential",
+							description:"Decrease this value to idle faster. Increase this value to idle slower. ",
+							default:'cat $IDLELOC/adreno_idler_downdifferential',
+							action:"adreno_idler '$IDLELOC'/adreno_idler_downdifferential"
+						}},'
+						$BB echo '{ SGeneric:{
+							title:"Idle Wait",
+							description:"Time to wait for entering idle, measured in milliseconds. This implementation is to prevent micro-lags on scrolling or playing games, meaning the lower it gets, the slower & low-power it would get.",
+							default:'cat $IDLELOC/adreno_idler_idlewait',
+							action:"adreno_idler '$IDLELOC'/adreno_idler_idlewait"
+						}},'
+						$BB echo '{ SGeneric:{
+							title:"Idle Workload",
+							description:"Any workload higher than this will be treated as non-idle workload, meaning the higher it gets, the slower & low-power it would get.",
+							default:'cat $IDLELOC/adreno_idler_idleworkload',
+							action:"adreno_idler '$IDLELOC'/adreno_idler_idleworkload"
+						}},
+						{ SSpacer:{
+							height: 1
+						}},'
+				fi`
 		]
 }
 CTAG

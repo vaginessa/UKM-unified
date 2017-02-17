@@ -274,6 +274,11 @@ case "$1" in
 			$BB echo "\"$GPUGOV\",";
 		done;
 	;;
+	KRYOGPUGovernorList)
+		for GPUGOV in `$BB cat /sys/devices/soc/b00000.qcom,kgsl-3d0/devfreq/b00000.qcom,kgsl-3d0/available_governors`; do
+			$BB echo "\"$GPUGOV\",";
+		done;
+	;;
 	GPUPowerLevel)
 		for GPUFREQ in `$BB cat /sys/devices/fdb00000.qcom,kgsl-3d0/devfreq/fdb00000.qcom,kgsl-3d0/available_frequencies | $BB tr ' ' '\n' | $BB sort -u` ; do
 		LABEL=$((GPUFREQ / 1000000));
