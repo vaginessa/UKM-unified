@@ -399,6 +399,50 @@ case "$1" in
 
 		$BB echo "Core 2: $CPU2@nCore 3: $CPU3";
 	;;
+	LiveCPU1OnlineOffline)
+		CPU0=`$BB cat /sys/devices/system/cpu/cpu0/online 2> /dev/null`;
+		CPU1=`$BB cat /sys/devices/system/cpu/cpu1/online 2> /dev/null`;
+		CPU2=`$BB cat /sys/devices/system/cpu/cpu2/online 2> /dev/null`;
+		CPU3=`$BB cat /sys/devices/system/cpu/cpu3/online 2> /dev/null`;
+
+		if [ $CPU0 == 0 ]; then CPU0="Off"; else CPU0="On"; fi;
+		if [ $CPU1 == 0 ]; then CPU1="Off"; else CPU1="On"; fi;
+		if [ $CPU2 == 0 ]; then CPU2="Off"; else CPU2="On"; fi;
+		if [ $CPU3 == 0 ]; then CPU3="Off"; else CPU3="On"; fi;
+
+		$BB echo "CPU Cpu Status@n";
+		$BB echo "0:$CPU0 ~ 1:$CPU1 ~ 2:$CPU2 ~ 3:$CPU3@n";
+	;;
+	LiveCPU2OnlineOffline)
+		CPU4=`$BB cat /sys/devices/system/cpu/cpu4/online 2> /dev/null`;
+		CPU5=`$BB cat /sys/devices/system/cpu/cpu5/online 2> /dev/null`;
+		CPU6=`$BB cat /sys/devices/system/cpu/cpu6/online 2> /dev/null`;
+		CPU7=`$BB cat /sys/devices/system/cpu/cpu7/online 2> /dev/null`;
+
+		if [ $CPU4 == 0 ]; then CPU4="Off"; else CPU4="On"; fi;
+		if [ $CPU5 == 0 ]; then CPU5="Off"; else CPU5="On"; fi;
+		if [ $CPU6 == 0 ]; then CPU6="Off"; else CPU6="On"; fi;
+		if [ $CPU7 == 0 ]; then CPU7="Off"; else CPU7="On"; fi;
+
+		$BB echo "CPU Cpu Status@n";
+		$BB echo "4:$CPU4 ~ 5:$CPU5 ~ 6:$CPU6 ~ 7:$CPU7@n";
+	;;
+	LiveKRYOOnlineOffline)
+		CPU0=`$BB cat /sys/devices/system/cpu/cpu0/online 2> /dev/null`;
+		CPU1=`$BB cat /sys/devices/system/cpu/cpu1/online 2> /dev/null`;
+		CPU2=`$BB cat /sys/devices/system/cpu/cpu2/online 2> /dev/null`;
+		CPU3=`$BB cat /sys/devices/system/cpu/cpu3/online 2> /dev/null`;
+
+		if [ $CPU0 == 0 ]; then CPU0="Off"; else CPU0="On"; fi;
+		if [ $CPU1 == 0 ]; then CPU1="Off"; else CPU1="On"; fi;
+		if [ $CPU2 == 0 ]; then CPU2="Off"; else CPU2="On"; fi;
+		if [ $CPU3 == 0 ]; then CPU3="Off"; else CPU3="On"; fi;
+
+		$BB echo "Kyro 1.6 Cpu Status@n";
+		$BB echo "0:$CPU0 ~ 1:$CPU1@n";
+		$BB echo "@nKyro 2.2 Cpu	Status@n";
+		$BB echo "4:$CPU2 ~ 3:$CPU3";
+	;;
 	LiveCPUTemperature)
 		CPU_C=`$BB cat /sys/class/thermal/thermal_zone7/temp`;
 		CPU_F=`$BB awk "BEGIN { print ( ($CPU_C * 1.8) + 32 ) }"`;
@@ -732,6 +776,30 @@ case "$1" in
 		UNUSED=${UNUSED%??};
 		$BB echo "$UNUSED";
 	;;
+	LiveUnUsedGpu)
+		UNUSED="";
+		while read FREQ TIME; do
+			FREQ="$((FREQ / 1000000)) MHz";
+			if [ $TIME -lt "1000" ]; then
+				UNUSED="$UNUSED$FREQ, ";
+			fi;
+		done < /sys/devices/soc.0/fdb00000.qcom,kgsl-3d0/devfreq/fdb00000.qcom,kgsl-3d0/time_in_state;
+
+		UNUSED=${UNUSED%??};
+		$BB echo "$UNUSED";
+	;;
+	LiveUnUsedKRYOGpu)
+		UNUSED="";
+		while read FREQ TIME; do
+			FREQ="$((FREQ / 1000000)) MHz";
+			if [ $TIME -lt "1000" ]; then
+				UNUSED="$UNUSED$FREQ, ";
+			fi;
+		done < /sys/devices/soc/b00000.qcom,kgsl-3d0/devfreq/b00000.qcom,kgsl-3d0/time_in_state;
+
+		UNUSED=${UNUSED%??};
+		$BB echo "$UNUSED";
+	;;
 	LiveWakelocksKernel)
 		WL="";
 		CNT=0;
@@ -921,5 +989,53 @@ SetKRYO2Governor)
 		if [ -n "$setstate" ]; then
 			$BB echo -ne "\x$setstate" | $BB dd obs=1 count=1 seek=$offset of=$block 2> /dev/null;
 		fi;
+	;;
+		LiveChargeCurrent)
+			$BB echo "mA: `$BB cat /sys/kernel/charge_levels/charge_info`"
+	;;
+		LiveKernelCurrent)
+			$BB echo "`$BB uname -r`"
+	;;
+		LiveInfoCurrent)
+			$BB echo "Version: 4.0.1.4 Special Edition"
+	;;
+		LiveBrickedHotplug)
+			$BB echo "Bricked Hotplug Driver"
+	;;
+		LiveIntellidHotplug)
+			$BB echo "Intelli Hotplug Driver"
+	;;
+		LivedMsmHotplug)
+			$BB echo "Msm Hotplug Driver"
+	;;
+		LiveSimpleThermal)
+			$BB echo "Simple Thermal Driver"
+	;;
+	LiveCpuBoost)
+			$BB echo "CPU Boost Driver"
+	;;
+	LiveCPU1)
+			$BB echo "CPU"
+	;;
+	LiveCPU2)
+			$BB echo "CPU 2"
+	;;
+	LiveKRYO1)
+			$BB echo "Kryo 2.2 Cluster"
+	;;
+	LiveKRYO2)
+			$BB echo "Kryo 1.6 Cluster"
+	;;
+	LiveCpuBoost)
+			$BB echo "CPU Boost"
+	;;
+	LiveCoreControl)
+			$BB echo "Core Control"
+	;;
+	LiveStateNotifier)
+			$BB echo "State Notifier Driver"
+	;;
+	LiveMsmPerformance)
+			$BB echo "MSM Performance Driver"
 	;;
 esac;
