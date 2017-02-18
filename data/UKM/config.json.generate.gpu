@@ -53,6 +53,7 @@ cat << CTAG
 							'\`sh $DEVICE GPUFrequencyList\`'
 						}
 				}},'
+                fi`
 				`if [ -f "\`sh $DEVICE DirKRYOGPUMaxFrequency\`" ]; then
 				GPUMAX=\`sh $DEVICE DirKRYOGPUMaxFrequency\`
 					$BB echo '{ SSeekBar:{
