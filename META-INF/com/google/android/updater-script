@@ -2,6 +2,7 @@ ui_print("***********************************************");
 ui_print("*               Welcome to the                *");
 ui_print("*          Universal Kernel Manager           *");
 ui_print("*             Created by apb_axel             *");
+ui_print("*             Modified by yarpiin             *");
 ui_print("*      Don't forget to install Synapse!       *");
 ui_print("***********************************************");
 ui_print("");

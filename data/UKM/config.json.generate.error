@@ -83,10 +83,6 @@ cat << CTAG
 					label:"Fix Device Not Supported",
 					action:"restorebackup restart"
 			}},
-			{ SButton:{
-					label:"UKM Xda Official Thread",
-					action:"devtools ukmxda"
-			}},
 		]
 }
 CTAG
