@@ -251,7 +251,7 @@ case "$1" in
 	DirIOSchedulerTree)
 		$BB echo "/sys/block/mmcblk0/queue/iosched";
 	;;
-    DirIOSchedulerTree)
+    DirKRYOIOSchedulerTree)
 		$BB echo "/sys/block/sda/queue/iosched";
 	;;
 	DirTCPCongestion)
@@ -305,6 +305,11 @@ case "$1" in
 	;;
 	IOSchedulerList)
 		for IOSCHED in `$BB cat /sys/block/mmcblk0/queue/scheduler | $BB sed -e 's/\]//;s/\[//'`; do
+			$BB echo "\"$IOSCHED\",";
+		done;
+	;;
+	KRYOIOSchedulerList)
+		for IOSCHED in `$BB cat /sys/block/sda/queue/scheduler | $BB sed -e 's/\]//;s/\[//'`; do
 			$BB echo "\"$IOSCHED\",";
 		done;
 	;;

@@ -18,21 +18,21 @@ cat << CTAG
 				{ SOptionList:{
 					title:"I/O Scheduler",
 					description:"The I/O Scheduler decides how to prioritize and handle I/O requests. More info: <a href='http://timos.me/tm/wiki/ioscheduler'>HERE</a>",
-					default:`$BB echo $($UKM/actions/bracket-option \`sh $DEVICE DirIOScheduler\`)`,
+					default:`$BB echo $($UKM/actions/bracket-option \`sh $DEVICE DirKRYOIOScheduler\`)`,
 					action:"ioset scheduler",
 					values:[
-						`sh $DEVICE IOSchedulerList`
+						`sh $DEVICE KRYOIOSchedulerList`
 					],
 					notify:[
 						{
 							on:APPLY,
 							do:[ REFRESH, CANCEL ],
-							to:"`sh $DEVICE DirIOSchedulerTree`"
+							to:"`sh $DEVICE DirKRYOIOSchedulerTree`"
 						},
 						{
 							on:REFRESH,
 							do:REFRESH,
-							to:"`sh $DEVICE DirIOSchedulerTree`"
+							to:"`sh $DEVICE DirKRYOIOSchedulerTree`"
 						}
 					]
 				}},
@@ -113,7 +113,7 @@ cat << CTAG
 				title:"I/O Scheduler Tunables"
 			}},
 				{ STreeDescriptor:{
-					path:"`sh $DEVICE DirIOSchedulerTree`",
+					path:"`sh $DEVICE DirKRYOIOSchedulerTree`",
 					generic: {
 						directory: {},
 						element: {
