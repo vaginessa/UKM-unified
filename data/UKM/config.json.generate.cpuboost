@@ -116,28 +116,28 @@ cat << CTAG
 								title:"CPU0 Input Boost Frequency",
 								action:"cpuboostibf 0",
 								values:{ 0:"Disabled", '
-									sh $DEVICE Kyro1FrequencyList
+									sh $DEVICE CPUFrequencyList
 								$BB echo '}
 							}},
 							{ SSeekBar:{
 								title:"CPU1 Input Boost Frequency",
 								action:"cpuboostibf 1",
 								values:{ 0:"Disabled", '
-									sh $DEVICE Kyro1FrequencyList
+									sh $DEVICE CPUFrequencyList
 								$BB echo '}
 							}},
 							{ SSeekBar:{
 								title:"CPU2 Input Boost Frequency",
 								action:"cpuboostibf 2",
 								values:{ 0:"Disabled", '
-									sh $DEVICE Kyro2FrequencyList
+									sh $DEVICE CPUFrequencyList
 								$BB echo '}
 							}},
 							{ SSeekBar:{
 								title:"CPU3 Input Boost Frequency",
 								action:"cpuboostibf 3",
 								values:{ 0:"Disabled", '
-									sh $DEVICE Kyro2FrequencyList
+									sh $DEVICE CPUFrequencyList
 								$BB echo '}
 							}},'
 						fi;
