@@ -211,6 +211,66 @@ cat << CTAG
 						action:"generic sys/module/snd_soc_wcd9320/parameters/high_perf_mode",
 					}},'
 			fi`
+			`if [ -d "/sys/kernel/sound_control" ]; then
+				$BB echo '{ SPane:{
+					title:"Flar 2 Sound Control"
+				}},'
+				if [ -f "/sys/kernel/sound_control/speaker_gain" ]; then
+					SPG=\`$BB cat /sys/kernel/sound_control/speaker_gain\`
+					$BB echo '{ SSeekBar:{
+						title:"Speaker Volume Control",
+                        min:0,
+						max:20,
+						step:1,
+						default:'$SPG',
+						action:"generic /sys/kernel/sound_control/speaker_gain",
+					}},'
+				fi
+				if [ -f "/sys/kernel/sound_control/headphone_left_gain" ]; then
+					HPG=\`$BB cat /sys/kernel/sound_control/headphone_left_gain\`
+					$BB echo '{ SSeekBar:{
+						title:"Left Headphone Volume Control",
+						min:-20,
+						max:20,
+						step:1,
+						default:'$HPG',
+						action:"generic /sys/kernel/sound_control/headphone_left_gain"
+					}},'
+				fi
+				if [ -f "/sys/kernel/sound_control/headphone_right_gain" ]; then
+					HPG=\`$BB cat /sys/kernel/sound_control/headphone_right_gain\`
+					$BB echo '{ SSeekBar:{
+						title:"Right Headphone Volume Control",
+						min:-20,
+						max:20,
+						step:1,
+						default:'$HPG',
+						action:"generic /sys/kernel/sound_control/headphone_right_gain"
+					}},'
+				fi
+				if [ -f "/sys/kernel/sound_control/headphone_gain" ]; then
+					HPG=\`$BB cat /sys/kernel/sound_control/headphone_gain\`
+					$BB echo '{ SSeekBar:{
+						title:"Right Headphone Volume Control",
+						min:-20,
+						max:20,
+						step:1,
+						default:'$HPG',
+						action:"generic /sys/kernel/sound_control/headphone_gain"
+					}},'
+				fi
+				if [ -f "/sys/kernel/sound_control/mic_gain" ]; then
+					MCG=\`$BB cat /sys/kernel/sound_control/mic_gain\`
+					$BB echo '{ SSeekBar:{
+						title:"Microphone Gain Control",
+                        min:0,
+						max:10,
+						step:1,
+						default:'$MCG',
+						action:"generic /sys/kernel/sound_control/sound_control/mic_gain",
+					}},'
+				fi
+            fi`
 		]
 }
 CTAG
