@@ -13,13 +13,13 @@ cat << CTAG
 					min:128,
 					max:4096,
 					default:`$BB cat /sys/block/sda/queue/read_ahead_kb`,
-					action:"ioset queue read_ahead_kb"
+					action:"iosetkryo queue read_ahead_kb"
 				}},
 				{ SOptionList:{
 					title:"I/O Scheduler",
 					description:"The I/O Scheduler decides how to prioritize and handle I/O requests. More info: <a href='http://timos.me/tm/wiki/ioscheduler'>HERE</a>",
 					default:`$BB echo $($UKM/actions/bracket-option \`sh $DEVICE DirKRYOIOScheduler\`)`,
-					action:"ioset scheduler",
+					action:"iosetkryo scheduler",
 					values:[
 						`sh $DEVICE KRYOIOSchedulerList`
 					],
@@ -68,25 +68,25 @@ cat << CTAG
 					description:"Draw entropy from spinning (rotational) storage.",
 					label:"Add Random",
 					default:`$BB cat /sys/block/sda/queue/add_random`,
-					action:"ioset queue add_random"
+					action:"iosetkryo queue add_random"
 				}},
 				{ SCheckBox:{
 					description:"Maintain I/O statistics for this storage device. Disabling will break I/O monitoring apps.",
 					label:"I/O Stats",
 					default:`$BB cat /sys/block/sda/queue/iostats`,
-					action:"ioset queue iostats"
+					action:"iosetkryo queue iostats"
 				}},
 				{ SCheckBox:{
 					description:"Treat device as rotational storage.",
 					label:"Rotational",
 					default:`$BB cat /sys/block/sda/queue/rotational`,
-					action:"ioset queue rotational"
+					action:"iosetkryo queue rotational"
 				}},				
 				{ SOptionList:{
 					title:"No Merges",
 					description:"Types of merges (prioritization) the scheduler queue for this storage device allows.",
 					default:`$BB cat /sys/block/sda/queue/nomerges`,
-					action:"ioset queue nomerges",
+					action:"iosetkryo queue nomerges",
 					values:{
 						0:"All", 1:"Simple Only", 2:"None"
 					}
@@ -95,7 +95,7 @@ cat << CTAG
 					title:"RQ Affinity",
 					description:"Try to have scheduler requests complete on the CPU core they were made from. Higher is more aggressive. Some kernels only support 0-1.",
 					default:`$BB cat /sys/block/sda/queue/rq_affinity`,
-					action:"ioset queue rq_affinity",
+					action:"iosetkryo queue rq_affinity",
 					values:{
 						0:"Disabled", 1:"Enabled", 2:"Aggressive"
 					}
@@ -107,7 +107,7 @@ cat << CTAG
 					min:128,
 					max:2048,
 					default:`$BB cat /sys/block/sda/queue/nr_requests`,
-					action:"ioset queue nr_requests"
+					action:"iosetkryo queue nr_requests"
 				}},
 			{ SPane:{
 				title:"I/O Scheduler Tunables"
