@@ -161,11 +161,11 @@ cat << CTAG
 					}},'
 				fi
 				if [ -f "/sys/module/mdss_fb/parameters/backlight_dimmer"  ]; then
-				BLD=\`$BB cat /sys/module/mdss_fb/parameters/backlight_dimmer\`;
+				BLD=\`bool /sys/module/mdss_fb/parameters/backlight_dimmer\`;
 					$BB echo '{ SCheckBox:{
 						label:"Backlight Dimmer Enabled",
 						default:'$BLD',
-						action:"generic /sys/module/mdss_fb/parameters/backlight_dimmer"
+						action:"boolean /sys/module/mdss_fb/parameters/backlight_dimmer"
 					}},'
 				fi
 			fi`
