@@ -5,7 +5,7 @@ cat << CTAG
 			{ SLiveLabel:{
 						refresh:0,
 						style:italic,
-						action:"live Kyro"
+						action:"live KRYO2"
 					}},
 			{ SPane:{
 				title:"Live Cpu Frequency:"
@@ -13,7 +13,7 @@ cat << CTAG
 				{ SLiveLabel:{
 					refresh:800,
 					style:italic,
-					action:"live KyroFrequency"
+					action:"live KRYO2Frequency"
 				}},
 			{ STitleBar:{
 				title:"CPU Frequency Scaling"
@@ -23,21 +23,21 @@ cat << CTAG
 						height: 1
 					}},'
 					$BB echo '{ SSeekBar:{
-						title:"Kryo 2.2 Min Frequency",
+						title:"Kryo 2.2 Min Scaling Frequency",
 						description:"Set the minimum frequency the CPU scales down to.",
-						default:'\`sh $DEVICE DefaultKyro2MinFrequency\`',
-						action:"cpuset '\`sh $DEVICE DirKyro2MinFrequency\`'",
+						default:'\`sh $DEVICE DefaultKRYO2MinFrequency\`',
+						action:"cpuset '\`sh $DEVICE DirKRYO2MinFrequency\`'",
 						values:{'
-							sh $DEVICE Kyro2FrequencyList
+							sh $DEVICE KRYO2FrequencyList
 						$BB echo }'
 					}},'
 					$BB echo '{ SSeekBar:{
-						title:"Kryo 2.2 Max Frequency",
+						title:"Kryo 2.2 Max Scaling Frequency",
 						description:"Set the maximum frequency the CPU scales up to.",
-						default:'\`sh $DEVICE DefaultKyro2MaxFrequency\`',
-						action:"cpuset '\`sh $DEVICE DirKyro2MaxFrequency\`'",
+						default:'\`sh $DEVICE DefaultKRYO2MaxFrequency\`',
+						action:"cpuset '\`sh $DEVICE DirKRYO2MaxFrequency\`'",
 						values:{'
-							sh $DEVICE Kyro2FrequencyList
+							sh $DEVICE KRYO2FrequencyList
 						$BB echo }'
 					}},'
 				fi`
@@ -54,16 +54,16 @@ cat << CTAG
 					{ SLiveLabel:{
 						refresh:0,
 						style:italic,
-						action:"live Kyro"
+						action:"live KRYO2"
 					}},
 					{ SSpacer:{
 						height: 1
 					}},
 					{ SOptionList:{
-						default:'\`sh $DEVICE DefaultCPUGovernorKyro2\`',
-						action:"cpuset '\`sh $DEVICE DirCPUGovernorKyro2\`'",
+						default:'\`sh $DEVICE DefaultKRYO2Governor\`',
+						action:"cpuset '\`sh $DEVICE DirKRYO2Governor\`'",
 						values:['
-							sh $DEVICE CPUGovernorList
+							sh $DEVICE KRYO2GovernorList
 						$BB echo '],
 						notify:[
 							{
