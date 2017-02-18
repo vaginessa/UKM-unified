@@ -2192,7 +2192,7 @@ cat << CTAG
 						title:"Frequency 1_1",
 						action:"generic /sys/kernel/alucard_hotplug/hotplug_freq_1_1",
 						values:{'
-							sh $DEVICE Kyro1FrequencyList
+							sh $DEVICE CPUFrequencyList
 						$BB echo '}
 					}},'
 				fi
@@ -2201,7 +2201,7 @@ cat << CTAG
 						title:"Frequency 2_0",
 						action:"generic /sys/kernel/alucard_hotplug/hotplug_freq_2_0",
 						values:{'
-							sh $DEVICE Kyro1FrequencyList
+							sh $DEVICE CPUFrequencyList
 						$BB echo '}
 					}},'
 				fi
@@ -2210,7 +2210,7 @@ cat << CTAG
 						title:"Frequency 2_1",
 						action:"generic /sys/kernel/alucard_hotplug/hotplug_freq_2_1",
 						values:{'
-							sh $DEVICE Kyro1FrequencyList
+							sh $DEVICE CPUFrequencyList
 						$BB echo '}
 					}},'
 				fi
@@ -2219,7 +2219,7 @@ cat << CTAG
 						title:"Frequency 3_0",
 						action:"generic /sys/kernel/alucard_hotplug/hotplug_freq_3_0",
 						values:{'
-							sh $DEVICE Kyro2FrequencyList
+							sh $DEVICE CPUFrequencyList
 						$BB echo '}
 					}},'
 				fi
@@ -2228,7 +2228,7 @@ cat << CTAG
 						title:"Frequency 3_1",
 						action:"generic /sys/kernel/alucard_hotplug/hotplug_freq_3_1",
 						values:{'
-							sh $DEVICE Kyro2FrequencyList
+							sh $DEVICE CPUFrequencyList
 						$BB echo '}
 					}},'
 				fi
@@ -2237,7 +2237,7 @@ cat << CTAG
 						title:"Frequency 4_0",
 						action:"generic /sys/kernel/alucard_hotplug/hotplug_freq_4_0",
 						values:{'
-							sh $DEVICE Kyro2FrequencyList
+							sh $DEVICE CPUFrequencyList
 						$BB echo '}
 					}},'
 				fi
