@@ -2,24 +2,652 @@ cat << CTAG
 {
 	name:HOTPLUG,
 		elements:[
+			`if [ -f "/sys/kernel/boeffla_config_mode/enabled" ]; then
+                               BCM=\`$BB cat /sys/kernel/boeffla_config_mode/enabled\`;
+                               $BB echo '{ SPane:{
+                                       title:"Boeffla Config Mode",
+									}},
+									{ SCheckBox:{
+										description:"BCM will stop big cores shutting down on low battery",
+										label:"Enable BCM",
+                                        default:'$BCM',
+                                        action:"generic /sys/kernel/boeffla_config_mode/enabled",
+									}},
+									{ SSpacer:{
+										height: 1
+									}}'
+				fi`
 			{ SPane:{
 				title:"Info"
 			}},
-				{ SDescription:{
+			{ SDescription:{
 					description:"Use only one hotplug driver from the following options, using more than at the same time may cause unexpected behavior."
 				}},
-			`if [ -f "/system/bin/mpdecision" ]; then
-			MPDEC=\`ps | $BB grep mpdecision\`
-				if [ -n "$MPDEC" ]; then MPDEC=1; else MPDEC=0; fi
+			`if [ -d "/sys/kernel/hima_hotplug" ]; then
 				$BB echo '{ SPane:{
-					title:"MPDecision"
-				}},
-					{ SCheckBox:{
-						label:"Enable",
-						description:"Stock Qualcomm hotplug driver and frequency service. This should be disabled if current kernel has an alternative.",
-						default:'$MPDEC',
-						action:"serviceset mpdecision"
+					title:"Hima Hotplug"
+				}},'
+				if [ -f "/sys/kernel/hima_hotplug/hima_hotplug_active" ]; then
+					HIMAN=\`$BB cat /sys/kernel/hima_hotplug/hima_hotplug_active\`
+					$BB echo '{ SCheckBox:{
+						label:"Hotplug Enabled",
+						description:"Hotplug Driver ported from HTC m9.",
+						default:'$HIMAN',
+						action:"generic /sys/kernel/hima_hotplug/hima_hotplug_active"
+				}},'
+				fi
+				if [ -f "/sys/kernel/hima_hotplug/current_profile_no" ]; then
+					HP=\`$BB cat /sys/kernel/hima_hotplug/current_profile_no\`;
+					$BB echo '{ SOptionList:{
+						title:"Hotplug Style",
+						description:"Sets how hotplug drives cpus.",
+						default:'$HP',
+						action:"generic /sys/kernel/hima_hotplug/current_profile_no",
+						values:{
+							1:"Power Save", 0:"Balanced", 2:"Performance"
+						}
+				}},'
+				fi
+				if [ -f "/sys/kernel/hima_hotplug/min_cpus_online" ]; then
+					CPU=\`$BB cat /sys/kernel/hima_hotplug/min_cpus_online\`
+					$BB echo '{ SSeekBar:{
+						title:"Minimum CPUs online at anytime",
+						min:1,
+						max:8,
+						step:1,
+						default:'$CPU',
+						action:"generic /sys/kernel/hima_hotplug/min_cpus_online"
 					}},'
+				fi
+				if [ -f "/sys/kernel/hima_hotplug/max_cpus_online" ]; then
+					CPU=\`$BB cat /sys/kernel/hima_hotplug/max_cpus_online\`
+					$BB echo '{ SSeekBar:{
+						title:"Maximum CPUs online at anytime",
+						min:1,
+						max:8,
+						step:1,
+						default:'$CPU',
+						action:"generic /sys/kernel/hima_hotplug/max_cpus_online"
+					}},'
+				fi
+				if [ -f "/sys/kernel/hima_hotplug/def_sampling_ms" ]; then
+				DS=\`$BB cat /sys/kernel/hima_hotplug/def_sampling_ms\`;
+					$BB echo '{ SSeekBar:{
+						title:"Defer Sampling",
+						min:0,
+						max:100,
+						unit:" ms",
+						step:1,
+						default:'$DS',
+						action:"generic /sys/kernel/hima_hotplug/def_sampling_ms"
+					}},'
+				fi
+			fi`
+			`if [ -d "/sys/module/autosmp/parameters" ]; then
+				if [ -f "/sys/module/autosmp/parameters/enabled" ]; then
+				AUTOSMP=\`bool /sys/module/autosmp/parameters/enabled\`;
+					$BB echo '{ SPane:{
+						title:"AutoSMP"
+					}},
+						{ SCheckBox:{
+							label:"Enable",
+							description:"An in kernel replacement for Qualcomms MPDecision. Developed by mrg666.",
+							default:'$AUTOSMP',
+							action:"boolean /sys/module/autosmp/parameters/enabled"
+						}},'
+				fi
+				if [ -f "/sys/kernel/autosmp/conf/scroff_single_core" ]; then
+				SOSC=\`$BB cat /sys/kernel/autosmp/conf/scroff_single_core\`
+						$BB echo '{ SCheckBox:{
+							label:"Screen off Single Core",
+							description:"Use only one core if screen is off.",
+							default:'$SOSC',
+							action:"generic /sys/kernel/autosmp/conf/scroff_single_core"
+						}},'
+				fi
+				if [ -f "/sys/kernel/autosmp/conf/min_cpus" ]; then
+				MINCPU=\`$BB cat /sys/kernel/autosmp/conf/min_cpus\`
+						$BB echo '{ SSeekBar:{
+							title:"Min CPUs",
+							description:"Minimum CPUs online at any time.",
+							min:1,
+							max:'
+								sh $DEVICE MaxCPU
+							$BB echo ',
+							step:1,
+							default:'$MINCPU',
+							action:"generic /sys/kernel/autosmp/conf/min_cpus",
+						}},'
+				fi
+				if [ -f "/sys/kernel/autosmp/conf/max_cpus" ]; then
+				MAXCPU=\`$BB cat /sys/kernel/autosmp/conf/max_cpus\`
+						$BB echo '{ SSeekBar:{
+							title:"Max CPUs",
+							description:"Maximum CPUs online at any time.",
+							min:1,
+							max:'
+								sh $DEVICE MaxCPU
+							$BB echo ',
+							step:1,
+							default:'$MAXCPU',
+							action:"generic /sys/kernel/autosmp/conf/max_cpus",
+						}},'
+				fi
+				if [ -f "/sys/kernel/autosmp/conf/cpufreq_down" ]; then
+				CFD=\`$BB cat /sys/kernel/autosmp/conf/cpufreq_down\`
+						$BB echo '{ SSeekBar:{
+							title:"CPU Frequency Down",
+							description:"Percentage values for down rate limits.",
+							min:0,
+							max:100,
+							step:1,
+							unit:"%",
+							default:'$CFD',
+							action:"generic /sys/kernel/autosmp/conf/cpufreq_down"
+						}},'
+				fi
+				if [ -f "/sys/kernel/autosmp/conf/cpufreq_up" ]; then
+				CFU=\`$BB cat /sys/kernel/autosmp/conf/cpufreq_up\`
+						$BB echo '{ SSeekBar:{
+							title:"CPU Frequency Up",
+							description:"Percentage values for up rate limits.",
+							min:0,
+							max:100,
+							step:1,
+							unit:"%",
+							default:'$CFU',
+							action:"generic /sys/kernel/autosmp/conf/cpufreq_up"
+						}},'
+				fi
+				if [ -f "/sys/kernel/autosmp/conf/cycle_up" ]; then
+				CU=\`$BB cat /sys/kernel/autosmp/conf/cycle_up\`
+						$BB echo '{ SSeekBar:{
+							title:"Cycle Up",
+							description:"Cycles to wait after the last hotplug event to plug another core.",
+							min:0,
+							max:3,
+							step:1,
+							default:'$CU',
+							action:"generic /sys/kernel/autosmp/conf/cycle_up"
+						}},'
+				fi
+				if [ -f "/sys/kernel/autosmp/conf/cycle_down" ]; then
+				CD=\`$BB cat /sys/kernel/autosmp/conf/cycle_down\`
+						$BB echo '{ SSeekBar:{
+							title:"Cycle Down",
+							description:"Cycles to wait after the last hotplug event to unplug another core.",
+							min:0,
+							max:3,
+							step:1,
+							default:'$CD',
+							action:"generic /sys/kernel/autosmp/conf/cycle_down"
+						}},'
+				fi
+				if [ -f "/sys/kernel/autosmp/conf/delay" ]; then
+				DL=\`$BB cat /sys/kernel/autosmp/conf/delay\`
+						$BB echo '{ SSeekBar:{
+							title:"Delay",
+							min:0,
+							max:500,
+							step:10,
+							default:'$DL',
+							action:"generic /sys/kernel/autosmp/conf/delay"
+						}},'
+				fi
+			fi`
+			`if [ -f "/sys/module/msm_performance/parameters/num_clusters" ]; then
+				$BB echo '{ SPane:{
+						title:"MSM Performance"
+					}},
+					{ SSpacer:{
+						height: 1
+					}},
+					{ SLiveLabel:{
+						refresh:0,
+						style:italic,
+						action:"live MsmPerformance"
+					}},
+					{ SSpacer:{
+						height: 1
+					}},'
+				if [ -f "/sys/module/msm_performance/parameters/max_cpus" ]; then
+					$BB echo '{ SGeneric:{
+							title:"Number of CPUs online at any time.",
+							description:"Min/Max cpus online defined for single cluster (K 1.6:K 2.2).",
+							default:"4:4",
+							action:"generic /sys/module/msm_performance/parameters/max_cpus"
+					}},'
+					$BB echo '{ SSpacer:{
+								height: 1
+						}},
+						{ SLiveLabel:{
+							refresh:500,
+							style:italic,
+							action:"live CPUOnlineOffline"
+						}},'
+				fi
+				$BB echo '{ SSpacer:{
+								height: 2
+					}},'
+				if [ -f "/sys/module/msm_performance/parameters/workload_detect" ]; then
+				WDM=\`$BB cat /sys/module/msm_performance/parameters/workload_detect\`;
+					$BB echo '{ SOptionList:{
+							title:"System Workload detection Mode",
+							description:"Detect workloads and then send hints to userspace of the detected activity so that userspace can take necessary tuning action to prepare the system for such activity.",
+							default:'$WDM',
+							action:"generic /sys/module/msm_performance/parameters/workload_detect",
+							values:{ 0:"Disabled", 1:"IO", 2:"CPU", 3:"MIXED"
+							}
+					}},'
+				fi
+				if [ -f "/sys/module/msm_performance/parameters/single_enter_cycles" ]; then
+					$BB echo '{ SSpacer:{
+									height: 2
+					}},'
+					$BB echo '{ SPane:{
+									title:"CPU Workload Detect",
+									description:"Detect single and multi threaded heavy workloads based on loads received from interactive governor. If one of these is detected then a notification is sent to the userspace so that an entity can read the nodes exposed to get an idea of the nature of workload running."
+					}},'
+					$BB echo '{ SSpacer:{
+								height: 2
+						}},
+						{ SDescription:{
+								description:"If the MAX load across all the CPUs is greater than a user-specified threshold for certain number of governor windows then the load is detected as a single-threaded workload."
+					}}'
+					$BB echo '{ SGeneric:{
+							title:"Single Enter Cycles (K1.6:K2.2).",
+							default:"4:4",
+							action:"generic /sys/module/msm_performance/parameters/single_enter_cycles"
+					}},'
+				fi
+				if [ -f "/sys/module/msm_performance/parameters/single_exit_cycles" ]; then
+					$BB echo '{ SGeneric:{
+							title:"Single Exit Cycles (K1.6:K2.2).",
+							default:"4:4",
+							action:"generic /sys/module/msm_performance/parameters/single_exit_cycles"
+					}},'
+				fi
+				if [ -f "/sys/module/msm_performance/parameters/single_enter_load" ]; then
+					$BB echo '{ SGeneric:{
+							title:"Single Enter Load Thresold (K1.6:K2.2).",
+							default:"90:90",
+							action:"generic /sys/module/msm_performance/parameters/single_enter_load"
+					}},'
+				fi
+				if [ -f "/sys/module/msm_performance/parameters/single_exit_load" ]; then
+					$BB echo '{ SGeneric:{
+							title:"Single Exit Load Thresold (K1.6:K2.2).",
+							default:"60:60",
+							action:"generic /sys/module/msm_performance/parameters/single_exit_load"
+					}},'
+				fi
+				if [ -f "/sys/module/msm_performance/parameters/multi_enter_cycles" ]; then
+					$BB echo '{ SSpacer:{
+								height: 2
+						}},
+						{ SDescription:{
+								description:"If the TOTAL load across all the CPUs is greater than a user-specified threshold for certain number of governor windows then the load is detected as a multi-threaded workload."
+					}}'
+					$BB echo '{ SGeneric:{
+							title:"Multi Enter Cycles (K1.6:K2.2).",
+							default:"4:4",
+							action:"generic /sys/module/msm_performance/parameters/multi_enter_cycles"
+					}},'
+				fi
+				if [ -f "/sys/module/msm_performance/parameters/multi_exit_cycles" ]; then
+					$BB echo '{ SGeneric:{
+							title:"Multi Exit Cycles (K1.6:K2.2).",
+							default:"4:4",
+							action:"generic /sys/module/msm_performance/parameters/multi_exit_cycles"
+					}},'
+				fi
+				if [ -f "/sys/module/msm_performance/parameters/pcpu_multi_enter_load" ]; then
+					$BB echo '{ SGeneric:{
+							title:"Multi Enter Load Thresold (K1.6:K2.2).",
+							default:"4:4",
+							action:"generic /sys/module/msm_performance/parameters/pcpu_multi_enter_load"
+					}},'
+				fi
+				if [ -f "/sys/module/msm_performance/parameters/pcpu_multi_exit_load" ]; then
+					$BB echo '{ SGeneric:{
+							title:"Multi Exit Load Thresold (K1.6:K2.2).",
+							default:"4:4",
+							action:"generic /sys/module/msm_performance/parameters/pcpu_multi_exit_load"
+					}},'
+				fi
+				if [ -f "/sys/module/msm_performance/parameters/io_enter_cycles" ]; then
+					$BB echo '{ SSpacer:{
+									height: 2
+					}},'
+					$BB echo '{ SPane:{
+									title:"IO Workload Detect",
+									description:"Some workloads spend a lot of time in IO activity and need higher performance from system resources (for eg. CPU/DDR frequencies)to complete with decent performance. Unfortunately cpufreq governors and other sytem resources crucial for IO are tuned for general usecases and hence might be slower to react to such demanding IO workloads."
+					}},'
+					$BB echo '{ SSpacer:{
+								height: 2
+						}},
+						{ SDescription:{
+								description:"IO activity is tracked every interactive governor timer boundary and if the percentage of iowait time in each cycle exceeds certain threshold continuously for certain number of cycles then heavy IO activity is detected."
+					}}'
+					$BB echo '{ SGeneric:{
+							title:"IO Enter Cycles.",
+							default:"4",
+							action:"generic /sys/module/msm_performance/parameters/io_enter_cycles"
+					}},'
+				fi
+				if [ -f "/sys/module/msm_performance/parameters/io_exit_cycles" ]; then
+					$BB echo '{ SGeneric:{
+							title:"IO Exit Cycles.",
+							default:"4",
+							action:"generic /sys/module/msm_performance/parameters/io_exit_cycles"
+					}},'
+				fi
+				if [ -f "/sys/module/msm_performance/parameters/iowait_ceiling_pct" ]; then
+					$BB echo '{ SGeneric:{
+							title:"IO Wait Ceiling Percentage.",
+							default:"25",
+							action:"generic /sys/module/msm_performance/parameters/iowait_ceiling_pct"
+					}},'
+				fi
+				if [ -f "/sys/module/msm_performance/parameters/iowait_floor_pct" ]; then
+					$BB echo '{ SGeneric:{
+							title:"IO Wait Floor Percentage.",
+							default:"8",
+							action:"generic /sys/module/msm_performance/parameters/iowait_floor_pct"
+					}},'
+					$BB echo '{ SSpacer:{
+									height: 1
+					}},'
+				fi
+			fi`
+			{ SSpacer:{
+				height: 1
+			}},
+			`if [ -f "/sys/devices/system/cpu/cpu0/core_ctl/is_big_cluster" ]; then
+				$BB echo '{ SPane:{
+						title:"CoreCtl Hotplug"
+					}},
+					{ SSpacer:{
+						height: 1
+					}},
+					{ SLiveLabel:{
+						refresh:0,
+						style:italic,
+						action:"live CpuClusterA53"
+					}},'
+				if [ -f "/sys/devices/system/cpu/cpu0/core_ctl/min_cpus" ]; then
+				MINCPU=\`$BB cat /sys/devices/system/cpu/cpu0/core_ctl/min_cpus\`;
+					$BB echo '{ SSeekBar:{
+						title:"Min CPUs Online A53",
+						description:"Minimum CPUs online at any time.",
+						min:1,
+						max:'
+							sh $DEVICE MaxCPU
+						$BB echo ',
+						step:1,
+						default:'$MINCPU',
+						action:"generic /sys/devices/system/cpu/cpu0/core_ctl/min_cpus"
+					}},'
+				fi
+				if [ -f "/sys/devices/system/cpu/cpu0/core_ctl/max_cpus" ]; then
+				MAXCPU=\`$BB cat /sys/devices/system/cpu/cpu0/core_ctl/max_cpus\`;
+					$BB echo '{ SSeekBar:{
+						title:"Max CPUs Online A53",
+						description:"Maximum CPUs online at any time.",
+						min:1,
+						max:'
+							sh $DEVICE MaxCPU
+						$BB echo ',
+						step:1,
+						default:'$MAXCPU',
+						action:"generic /sys/devices/system/cpu/cpu0/core_ctl/max_cpus"
+					}},'
+				fi
+				if [ -f "/sys/devices/system/cpu/cpu0/core_ctl/busy_down_thres" ]; then
+						$BB echo '{ SGeneric:{
+							title:"Busy Down Thresold",
+							description:"",
+							default:'cat /sys/devices/system/cpu/cpu0/core_ctl/busy_down_thres',
+							action:"generic /sys/devices/system/cpu/cpu0/core_ctl/busy_down_thres"
+						}},'
+				fi
+				if [ -f "/sys/devices/system/cpu/cpu0/core_ctl/busy_up_thres" ]; then
+						$BB echo '{ SGeneric:{
+							title:"Busy Up Thresold",
+							description:"",
+							default:'cat /sys/devices/system/cpu/cpu0/core_ctl/busy_up_thres',
+							action:"generic /sys/devices/system/cpu/cpu0/core_ctl/busy_up_thres"
+						}},'
+				fi
+				if [ -f "/sys/devices/system/cpu/cpu0/core_ctl/task_thres" ]; then
+						$BB echo '{ SGeneric:{
+							title:"Task Thresold",
+							description:"",
+							default:'cat /sys/devices/system/cpu/cpu0/core_ctl/task_thres',
+							action:"generic /sys/devices/system/cpu/cpu0/core_ctl/task_thres"
+						}},'
+				fi
+				if [ -f "/sys/devices/system/cpu/cpu0/core_ctl/offline_delay_ms" ]; then
+				OFFDMS=\`$BB cat /sys/devices/system/cpu/cpu0/core_ctl/offline_delay_ms\`
+						$BB echo '{ SSeekBar:{
+							title:"Offline Delay",
+							description:"",
+							min:0,
+							max:1000,
+							step:1,
+							unit:" ms",
+							default:'$OFFDMS',
+							action:"generic /sys/devices/system/cpu/cpu0/core_ctl/offline_delay_ms",
+						}},'
+				fi
+				if [ -f "/sys/devices/system/cpu/cpu0/core_ctl/hc_on" ]; then
+				HCON=\`$BB cat /sys/devices/system/cpu/cpu0/core_ctl/hc_on\`
+						$BB echo '{ SCheckBox:{
+							label:"HC On",
+							description:"",
+							default:'$HCON',
+							action:"generic /sys/devices/system/cpu/cpu0/core_ctl/hc_on"
+						}},'
+				fi
+				if [ -f "/sys/devices/system/cpu/cpu0/core_ctl/hc_ro_use_gourd" ]; then
+				HROG=\`$BB cat /sys/devices/system/cpu/cpu0/core_ctl/hc_ro_use_gourd\`
+						$BB echo '{ SCheckBox:{
+							label:"HC Use Gourd",
+							description:"",
+							default:'$HROG',
+							action:"generic /sys/devices/system/cpu/cpu0/core_ctl/hc_ro_use_gourd"
+						}},'
+				fi
+				if [ -f "/sys/devices/system/cpu/cpu0/core_ctl/hc_thres_on" ]; then
+				HTON=\`$BB cat /sys/devices/system/cpu/cpu0/core_ctl/hc_thres_on\`
+						$BB echo '{ SCheckBox:{
+							label:"HC Thresold On",
+							description:"",
+							default:'$HTON',
+							action:"generic /sys/devices/system/cpu/cpu0/core_ctl/hc_thres_on"
+						}},'
+				fi
+				if [ -f "/sys/devices/system/cpu/cpu0/core_ctl/hc_down_scale_on" ]; then
+				HDON=\`$BB cat /sys/devices/system/cpu/cpu0/core_ctl/hc_down_scale_on\`
+						$BB echo '{ SCheckBox:{
+							label:"HC Down Scale On",
+							description:"",
+							default:'$HDON',
+							action:"generic /sys/devices/system/cpu/cpu0/core_ctl/hc_down_scale_on"
+						}},'
+				fi
+				if [ -f "/sys/devices/system/cpu/cpu0/core_ctl/hc_ro_interval" ]; then
+				HROI=\`$BB cat /sys/devices/system/cpu/cpu0/core_ctl/hc_ro_interval\`
+						$BB echo '{ SSeekBar:{
+							title:"HC Ro Interval",
+							description:"",
+							min:0,
+							max:10000,
+							step:1,
+							unit:" ms",
+							default:'$HROI',
+							action:"generic /sys/devices/system/cpu/cpu0/core_ctl/hc_ro_interval",
+						}},'
+				fi
+				if [ -f "/sys/devices/system/cpu/cpu0/core_ctl/hc_correl_lvs" ]; then
+						$BB echo '{ SGeneric:{
+							title:"HC Correlated Levels",
+							description:"",
+							default:'cat /sys/devices/system/cpu/cpu0/core_ctl/hc_correl_lvs',
+							action:"generic /sys/devices/system/cpu/cpu0/core_ctl/hc_correl_lvs"
+						}},'
+				fi
+				if [ -f "/sys/devices/system/cpu/cpu0/core_ctl/hc_correl_use_pcost" ]; then
+						$BB echo '{ SGeneric:{
+							title:"HC Correlated Use Pcost",
+							description:"",
+							default:'cat /sys/devices/system/cpu/cpu0/core_ctl/hc_correl_use_pcost',
+							action:"generic /sys/devices/system/cpu/cpu0/core_ctl/hc_correl_use_pcost"
+						}},'
+				fi
+			fi`
+			`if [ -f "/sys/devices/system/cpu/cpu2/core_ctl/is_big_cluster" ]; then
+				$BB echo '{ SSpacer:{
+						height: 3
+					}},
+					{ SLiveLabel:{
+						refresh:0,
+						style:italic,
+						action:"live CpuClusterA57"
+					}},'
+				if [ -f "/sys/devices/system/cpu/cpu2/core_ctl/min_cpus" ]; then
+				MINCPU=\`$BB cat /sys/devices/system/cpu/cpu2/core_ctl/min_cpus\`;
+					$BB echo '{ SSeekBar:{
+						title:"Min CPUs Online A57",
+						description:"Minimum CPUs online at any time.",
+						min:0,
+						max:'
+							sh $DEVICE MaxCPU
+						$BB echo ',
+						step:1,
+						default:4,
+						action:"generic /sys/devices/system/cpu/cpu2/core_ctl/min_cpus"
+					}},'
+				fi
+				if [ -f "/sys/devices/system/cpu/cpu2/core_ctl/max_cpus" ]; then
+				MAXCPU=\`$BB cat /sys/devices/system/cpu/cpu2/core_ctl/max_cpus\`;
+					$BB echo '{ SSeekBar:{
+						title:"Max CPUs Online A57",
+						description:"Maximum CPUs online at any time.",
+						min:1,
+						max:'
+							sh $DEVICE MaxCPU
+						$BB echo ',
+						step:1,
+						default:'$MAXCPU',
+						action:"generic /sys/devices/system/cpu/cpu2/core_ctl/max_cpus"
+					}},'
+				fi
+				if [ -f "/sys/devices/system/cpu/cpu2/core_ctl/busy_down_thres" ]; then
+						$BB echo '{ SGeneric:{
+							title:"Busy Down Thresold",
+							description:"",
+							default:'cat /sys/devices/system/cpu/cpu2/core_ctl/busy_down_thres',
+							action:"generic /sys/devices/system/cpu/cpu2/core_ctl/busy_down_thres"
+						}},'
+				fi
+				if [ -f "/sys/devices/system/cpu/cpu2/core_ctl/busy_up_thres" ]; then
+						$BB echo '{ SGeneric:{
+							title:"Busy Up Thresold",
+							description:"",
+							default:'cat /sys/devices/system/cpu/cpu2/core_ctl/busy_up_thres',
+							action:"generic /sys/devices/system/cpu/cpu2/core_ctl/busy_up_thres"
+						}},'
+				fi
+				if [ -f "/sys/devices/system/cpu/cpu2/core_ctl/task_thres" ]; then
+						$BB echo '{ SGeneric:{
+							title:"Task Thresold",
+							description:"",
+							default:'cat /sys/devices/system/cpu/cpu2/core_ctl/task_thres',
+							action:"generic /sys/devices/system/cpu/cpu2/core_ctl/task_thres"
+						}},'
+				fi
+				if [ -f "/sys/devices/system/cpu/cpu2/core_ctl/offline_delay_ms" ]; then
+				OFFDMS=\`$BB cat /sys/devices/system/cpu/cpu2/core_ctl/offline_delay_ms\`
+					$BB echo '{ SSeekBar:{
+							title:"Offline Delay",
+							description:"",
+							min:0,
+							max:1000,
+							step:1,
+							unit:" ms",
+							default:'$OFFDMS',
+							action:"generic /sys/devices/system/cpu/cpu2/core_ctl/offline_delay_ms",
+					}},'
+				fi
+				if [ -f "/sys/devices/system/cpu/cpu2/core_ctl/hc_on" ]; then
+				HCON=\`$BB cat /sys/devices/system/cpu/cpu2/core_ctl/hc_on\`
+						$BB echo '{ SCheckBox:{
+							label:"HC On",
+							description:"",
+							default:'$HCON',
+							action:"generic /sys/devices/system/cpu/cpu2/core_ctl/hc_on"
+						}},'
+				fi
+				if [ -f "/sys/devices/system/cpu/cpu2/core_ctl/hc_ro_use_gourd" ]; then
+				HROG=\`$BB cat /sys/devices/system/cpu/cpu2/core_ctl/hc_ro_use_gourd\`
+						$BB echo '{ SCheckBox:{
+							label:"HC Use Gourd",
+							description:"",
+							default:'$HROG',
+							action:"generic /sys/devices/system/cpu/cpu2/core_ctl/hc_ro_use_gourd"
+						}},'
+				fi
+				if [ -f "/sys/devices/system/cpu/cpu2/core_ctl/hc_thres_on" ]; then
+				HTON=\`$BB cat /sys/devices/system/cpu/cpu2/core_ctl/hc_thres_on\`
+						$BB echo '{ SCheckBox:{
+							label:"HC Thresold On",
+							description:"",
+							default:'$HTON',
+							action:"generic /sys/devices/system/cpu/cpu2/core_ctl/hc_thres_on"
+						}},'
+				fi
+				if [ -f "/sys/devices/system/cpu/cpu2/core_ctl/hc_down_scale_on" ]; then
+				HDON=\`$BB cat /sys/devices/system/cpu/cpu2/core_ctl/hc_down_scale_on\`
+						$BB echo '{ SCheckBox:{
+							label:"HC Down Scale On",
+							description:"",
+							default:'$HDON',
+							action:"generic /sys/devices/system/cpu/cpu2/core_ctl/hc_down_scale_on"
+						}},'
+				fi
+				if [ -f "/sys/devices/system/cpu/cpu2/core_ctl/hc_ro_interval" ]; then
+				HROI=\`$BB cat /sys/devices/system/cpu/cpu2/core_ctl/hc_ro_interval\`
+						$BB echo '{ SSeekBar:{
+							title:"HC Ro Interval",
+							description:"",
+							min:0,
+							max:10000,
+							step:1,
+							unit:" ms",
+							default:'$HROI',
+							action:"generic /sys/devices/system/cpu/cpu2/core_ctl/hc_ro_interval",
+						}},'
+				fi
+				if [ -f "/sys/devices/system/cpu/cpu2/core_ctl/hc_correl_lvs" ]; then
+						$BB echo '{ SGeneric:{
+							title:"HC Correlated Levels",
+							description:"",
+							default:'cat /sys/devices/system/cpu/cpu2/core_ctl/hc_correl_lvs',
+							action:"generic /sys/devices/system/cpu/cpu2/core_ctl/hc_correl_lvs"
+						}},'
+				fi
+				if [ -f "/sys/devices/system/cpu/cpu2/core_ctl/hc_correl_use_pcost" ]; then
+						$BB echo '{ SGeneric:{
+							title:"HC Correlated Use Pcost",
+							description:"",
+							default:'cat /sys/devices/system/cpu/cpu2/core_ctl/hc_correl_use_pcost',
+							action:"generic /sys/devices/system/cpu/cpu2/core_ctl/hc_correl_use_pcost"
+						}},'
+				fi
+				$BB echo '{ SSpacer:{
+						height: 1
+				}},'
 			fi`
 			`if [ -d "/sys/module/intelli_plug/parameters" ] && [ ! -f "/sys/kernel/intelli_plug/full_mode_profile" ]; then
 				$BB echo '{ SPane:{
@@ -571,8 +1199,8 @@ cat << CTAG
 				if [ -f "$BHC/nwns_threshold_6" ]; then
 				NWNS6=\`$BB cat $BHC/nwns_threshold_6\`
 					$BB echo '{ SSeekBar:{
-							title:"Runqueue Threshold Hotplug CPU4",
-							description:"If this threshold is reached, CPU4 will be hotplugged.",
+							title:"Runqueue Threshold Hotplug cpu2",
+							description:"If this threshold is reached, cpu2 will be hotplugged.",
 							min:0,
 							max:100,
 							step:1,
@@ -673,8 +1301,8 @@ cat << CTAG
 				if [ -f "$BHC/twts_threshold_6" ]; then
 				TWTS6=\`$BB cat $BHC/twts_threshold_6\`
 					$BB echo '{ SSeekBar:{
-							title:"Time Threshold Hotplug CPU4",
-							description:"This amount of time must have passed for CPU4 to be hotplugged.",
+							title:"Time Threshold Hotplug cpu2",
+							description:"This amount of time must have passed for cpu2 to be hotplugged.",
 							unit:" ms",
 							min:0,
 							max:500,
@@ -1564,7 +2192,7 @@ cat << CTAG
 						title:"Frequency 1_1",
 						action:"generic /sys/kernel/alucard_hotplug/hotplug_freq_1_1",
 						values:{'
-							sh $DEVICE CPUFrequencyList
+							sh $DEVICE Kyro1FrequencyList
 						$BB echo '}
 					}},'
 				fi
@@ -1573,7 +2201,7 @@ cat << CTAG
 						title:"Frequency 2_0",
 						action:"generic /sys/kernel/alucard_hotplug/hotplug_freq_2_0",
 						values:{'
-							sh $DEVICE CPUFrequencyList
+							sh $DEVICE Kyro1FrequencyList
 						$BB echo '}
 					}},'
 				fi
@@ -1582,7 +2210,7 @@ cat << CTAG
 						title:"Frequency 2_1",
 						action:"generic /sys/kernel/alucard_hotplug/hotplug_freq_2_1",
 						values:{'
-							sh $DEVICE CPUFrequencyList
+							sh $DEVICE Kyro1FrequencyList
 						$BB echo '}
 					}},'
 				fi
@@ -1591,7 +2219,7 @@ cat << CTAG
 						title:"Frequency 3_0",
 						action:"generic /sys/kernel/alucard_hotplug/hotplug_freq_3_0",
 						values:{'
-							sh $DEVICE CPUFrequencyList
+							sh $DEVICE Kyro2FrequencyList
 						$BB echo '}
 					}},'
 				fi
@@ -1600,7 +2228,7 @@ cat << CTAG
 						title:"Frequency 3_1",
 						action:"generic /sys/kernel/alucard_hotplug/hotplug_freq_3_1",
 						values:{'
-							sh $DEVICE CPUFrequencyList
+							sh $DEVICE Kyro2FrequencyList
 						$BB echo '}
 					}},'
 				fi
@@ -1609,7 +2237,7 @@ cat << CTAG
 						title:"Frequency 4_0",
 						action:"generic /sys/kernel/alucard_hotplug/hotplug_freq_4_0",
 						values:{'
-							sh $DEVICE CPUFrequencyList
+							sh $DEVICE Kyro2FrequencyList
 						$BB echo '}
 					}},'
 				fi
@@ -1736,116 +2364,96 @@ cat << CTAG
 					}},'
 				fi;
 			fi`
-			`if [ -d "/sys/module/autosmp/parameters" ]; then
-				if [ -f "/sys/module/autosmp/parameters/enabled" ]; then
-				AUTOSMP=\`bool /sys/module/autosmp/parameters/enabled\`;
-					$BB echo '{ SPane:{
-						title:"AutoSMP"
-					}},
-						{ SCheckBox:{
-							label:"Enable",
-							description:"An in kernel replacement for Qualcomms MPDecision. Developed by mrg666.",
-							default:'$AUTOSMP',
-							action:"boolean /sys/module/autosmp/parameters/enabled"
-						}},'
+			`if [ -d "/sys/kernel/thunderplug" ]; then
+				$BB echo '{ SPane:{
+					title:"Thunderplug Hotplug"
+				}},'
+				if [ -f "/sys/kernel/thunderplug/hotplug_style" ]; then
+					HS=\`$BB cat /sys/kernel/thunderplug/hotplug_style\`;
+					$BB echo '{ SOptionList:{
+						title:"Hotplug Style",
+						description:"Sets how hotplug drives cpus.",
+						default:'$HS',
+						action:"generic /sys/kernel/thunderplug/hotplug_style",
+						values:{
+							1:"Per-Core Hotplug", 2:"Load Balancer"
+						}
+				}},'
 				fi
-				if [ -f "/sys/kernel/autosmp/conf/scroff_single_core" ]; then
-				SOSC=\`$BB cat /sys/kernel/autosmp/conf/scroff_single_core\`
-						$BB echo '{ SCheckBox:{
-							label:"Screen off Single Core",
-							description:"Use only one core if screen is off.",
-							default:'$SOSC',
-							action:"generic /sys/kernel/autosmp/conf/scroff_single_core"
-						}},'
+				if [ -f "/sys/kernel/thunderplug/endurance_level" ]; then
+					EL=\`$BB cat /sys/kernel/thunderplug/endurance_level\`;
+					$BB echo '{ SOptionList:{
+						title:"Cpu Endurance Level",
+						description:"Sets Core Mode.",
+						default:'$EL',
+						action:"generic /sys/kernel/thunderplug/endurance_level",
+						values:{
+							0:"Off", 1:"Quad Core", 2:"Dual Core"
+						}
+				}},'
 				fi
-				if [ -f "/sys/kernel/autosmp/conf/min_cpus" ]; then
-				MINCPU=\`$BB cat /sys/kernel/autosmp/conf/min_cpus\`
-						$BB echo '{ SSeekBar:{
-							title:"Min CPUs",
-							description:"Minimum CPUs online at any time.",
-							min:1,
-							max:'
-								sh $DEVICE MaxCPU
-							$BB echo ',
-							step:1,
-							default:'$MINCPU',
-							action:"generic /sys/kernel/autosmp/conf/min_cpus",
-						}},'
+				if [ -f "/sys/kernel/thunderplug/load_threshold" ]; then
+					LT=\`$BB cat /sys/kernel/thunderplug/load_threshold\`;
+					$BB echo '{ SSeekBar:{
+						title:"Hotplug load threshold",
+						description:"",
+						min:0,
+						max:100,
+						step:1,
+						unit:" %",
+						default:'$LT',
+						action:"generic /sys/kernel/thunderplug/load_threshold",
+				}},'
 				fi
-				if [ -f "/sys/kernel/autosmp/conf/max_cpus" ]; then
-				MAXCPU=\`$BB cat /sys/kernel/autosmp/conf/max_cpus\`
-						$BB echo '{ SSeekBar:{
-							title:"Max CPUs",
-							description:"Maximum CPUs online at any time.",
-							min:1,
-							max:'
-								sh $DEVICE MaxCPU
-							$BB echo ',
-							step:1,
-							default:'$MAXCPU',
-							action:"generic /sys/kernel/autosmp/conf/max_cpus",
-						}},'
+				if [ -f "/sys/kernel/thunderplug/suspend_cpus" ]; then
+					SC=\`$BB cat /sys/kernel/thunderplug/suspend_cpus\`;
+					$BB echo '{ SSeekBar:{
+						title:"Suspend CPUs",
+						description:"Sets number of cpus online when screen off",
+						min:1,
+						max:8,
+						step:1,
+						unit:"",
+						default:'$SC',
+						action:"generic /sys/kernel/thunderplug/suspend_cpus",
+				}},'
 				fi
-				if [ -f "/sys/kernel/autosmp/conf/cpufreq_down" ]; then
-				CFD=\`$BB cat /sys/kernel/autosmp/conf/cpufreq_down\`
-						$BB echo '{ SSeekBar:{
-							title:"CPU Frequency Down",
-							description:"Percentage values for down rate limits.",
-							min:0,
-							max:100,
-							step:1,
-							unit:"%",
-							default:'$CFD',
-							action:"generic /sys/kernel/autosmp/conf/cpufreq_down"
-						}},'
+				if [ -f "/sys/kernel/thunderplug/sampling_rate" ]; then
+					SR=\`$BB cat /sys/kernel/thunderplug/sampling_rate\`;
+					$BB echo '{ SSeekBar:{
+						title:"Lazines",
+						description:"Sets sampling rate",
+						min:0,
+						max:2500,
+						step:1,
+						unit:" ms",
+						default:'$SR',
+						action:"generic /sys/kernel/thunderplug/sampling_rate",
+				}},'
 				fi
-				if [ -f "/sys/kernel/autosmp/conf/cpufreq_up" ]; then
-				CFU=\`$BB cat /sys/kernel/autosmp/conf/cpufreq_up\`
-						$BB echo '{ SSeekBar:{
-							title:"CPU Frequency Up",
-							description:"Percentage values for up rate limits.",
-							min:0,
-							max:100,
-							step:1,
-							unit:"%",
-							default:'$CFU',
-							action:"generic /sys/kernel/autosmp/conf/cpufreq_up"
-						}},'
+				if [ -f "/sys/kernel/thunderplug/sched_mode" ]; then
+					SB=\`$BB cat /sys/kernel/thunderplug/sched_mode\`;
+					$BB echo '{ SOptionList:{
+						title:"Scheduler Boost",
+						description:"",
+						default:'$SB',
+						action:"generic /sys/kernel/thunderplug/sched_mode",
+						values:{
+							1:"Normal", 2:"Agressive"
+						}
+				}},'
 				fi
-				if [ -f "/sys/kernel/autosmp/conf/cycle_up" ]; then
-				CU=\`$BB cat /sys/kernel/autosmp/conf/cycle_up\`
-						$BB echo '{ SSeekBar:{
-							title:"Cycle Up",
-							description:"Cycles to wait after the last hotplug event to plug another core.",
-							min:0,
-							max:3,
-							step:1,
-							default:'$CU',
-							action:"generic /sys/kernel/autosmp/conf/cycle_up"
-						}},'
-				fi
-				if [ -f "/sys/kernel/autosmp/conf/cycle_down" ]; then
-				CD=\`$BB cat /sys/kernel/autosmp/conf/cycle_down\`
-						$BB echo '{ SSeekBar:{
-							title:"Cycle Down",
-							description:"Cycles to wait after the last hotplug event to unplug another core.",
-							min:0,
-							max:3,
-							step:1,
-							default:'$CD',
-							action:"generic /sys/kernel/autosmp/conf/cycle_down"
-						}},'
-				fi
-				if [ -f "/sys/kernel/autosmp/conf/delay" ]; then
-				DL=\`$BB cat /sys/kernel/autosmp/conf/delay\`
-						$BB echo '{ SSeekBar:{
-							title:"Delay",
-							min:0,
-							max:500,
-							step:10,
-							default:'$DL',
-							action:"generic /sys/kernel/autosmp/conf/delay"
-						}},'
+				if [ -f "/sys/kernel/thunderplug/touch_boost" ]; then
+					SB=\`$BB cat /sys/kernel/thunderplug/touch_boost\`;
+					$BB echo '{ SOptionList:{
+						title:"Touch Boost",
+						description:"",
+						default:'$SB',
+						action:"generic /sys/kernel/thunderplug/touch_boost",
+						values:{
+							0:"Off", 1:"On"
+						}
+				}},'
 				fi
 			fi`
 		]
