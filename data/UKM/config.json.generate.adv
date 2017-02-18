@@ -219,9 +219,6 @@ cat << CTAG
 						action:"generic /sys/module/lowmemorykiller/parameters/vmpressure_file_min"
 					}},'
 			fi`
-			{ SSpacer:{
-					height: 1
-			}},
 			`if [ -f "/sys/module/workqueue/parameters/power_efficient" ]; then
 				PE=\`bool /sys/module/workqueue/parameters/power_efficient\`
 					$BB echo '{ SPane:{
