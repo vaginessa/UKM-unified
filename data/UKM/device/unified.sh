@@ -315,10 +315,9 @@ case "$1" in
 	;;
 	LiveBatteryTemperature)
 		BAT_C=`$BB awk '{ print $1 / 10 }' /sys/class/power_supply/battery/temp`;
-		BAT_F=`$BB awk "BEGIN { print ( ($BAT_C * 1.8) + 32 ) }"`;
 		BAT_H=`$BB cat /sys/class/power_supply/battery/health`;
 
-		$BB echo "$BAT_C°C | $BAT_F°F@nHealth: $BAT_H";
+		$BB echo "$BAT_C°C@nHealth: $BAT_H";
 	;;
 	LiveBootloader)
 		version=`getprop ro.bootloader`;
@@ -378,7 +377,7 @@ case "$1" in
 		
 		$BB echo "Core 0: $CPU0@nCore 1: $CPU1@nCore 2: $CPU2@nCore 3: $CPU3";
 	;;
- LiveCPU2Frequency)
+ 	LiveCPU2Frequency)
 		CPU0=`$BB cat /sys/devices/system/cpu/cpu4/cpufreq/scaling_cur_freq 2> /dev/null`;
 		CPU1=`$BB cat /sys/devices/system/cpu/cpu5/cpufreq/scaling_cur_freq 2> /dev/null`;
 		CPU2=`$BB cat /sys/devices/system/cpu/cpu6/cpufreq/scaling_cur_freq 2> /dev/null`;
@@ -454,20 +453,15 @@ case "$1" in
 		$BB echo "4:$CPU2 ~ 3:$CPU3";
 	;;
 	LiveCPUTemperature)
-		CPU_C=`$BB cat /sys/class/thermal/thermal_zone7/temp`;
-		CPU_F=`$BB awk "BEGIN { print ( ($CPU_C * 1.8) + 32 ) }"`;
+		CPU_C=/sys/class/thermal/thermal_zone7/temp;
+		CPUK=/sys/module/clock_cpu_8996;
 
-		$BB echo "$CPU_C°C | $CPU_F°F";
-	;;
-    LiveKRYOCPUTemperature)
-		CPUC=/sys/class/thermal/thermal_zone7/temp;
-		CPUF=/sys/class/thermal/thermal_zone7/temp;
-		
-		if [ -f "$CPUC" ]; then
-			CPUT="$((`$BB cat $CPUC` / 10)) °C";
-			$BB echo "$CPUT";
+		if [ -d "$CPUK" ]; then
+			CPUT="$((`$BB cat $CPU_C` / 10)) °C";
+			
+			$BB echo "$CPUT";  
 		else
-			$BB echo "-";
+			$BB echo "$CPU_C°C";
 		fi;
 	;;
 	LiveGPUFrequency)
@@ -873,7 +867,7 @@ case "$1" in
 			$BB echo $2 > $CPU/cpufreq/scaling_governor 2> /dev/null;
 		done;
 	;;
-SetKRYO2Governor)
+	SetKRYO2Governor)
 		for CPU in /sys/devices/system/cpu/cpu[2-3]; do
 			$BB echo 1 > $CPU/online 2> /dev/null;
 			$BB echo $2 > $CPU/cpufreq/scaling_governor 2> /dev/null;
