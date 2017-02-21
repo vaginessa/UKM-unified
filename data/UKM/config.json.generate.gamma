@@ -49,6 +49,15 @@ cat << CTAG
 							action:"gamma /sys/devices/platform/kcal_ctrl.0/kcal",
 						}},'
 				fi
+				if [ -f "/sys/devices/platform/kcal_ctrl.0/kcal_enable" ]; then
+				KCALE=\`$BB cat /sys/devices/platform/kcal_ctrl.0/kcal_enable\`;
+					$BB echo '{ SCheckBox:{
+						label:"KCAL Enable",
+						description:"Enables/Disables RGB Multiplier Control",
+						default:'$KCALE',
+						action:"gamma /sys/devices/platform/kcal_ctrl.0/kcal_enable"
+					}},'
+				fi
 				if [ -f "/sys/devices/platform/kcal_ctrl.0/kcal_invert" ]; then
 				KCALINV=\`$BB cat /sys/devices/platform/kcal_ctrl.0/kcal_invert\`;
 					$BB echo '{ SCheckBox:{
