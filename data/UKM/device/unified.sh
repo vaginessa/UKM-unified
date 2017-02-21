@@ -11,6 +11,12 @@ case "$1" in
 		done;
 	;;
     CPU1FrequencyList)
+		for CPUFREQ in `$BB cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_available_frequencies`; do
+		LABEL=$((CPUFREQ / 1000));
+			$BB echo "$CPUFREQ:\"${LABEL} MHz\", ";
+		done;
+	;;
+	CPU2FrequencyList)
 		for CPUFREQ in `$BB cat /sys/devices/system/cpu/cpu4/cpufreq/scaling_available_frequencies`; do
 		LABEL=$((CPUFREQ / 1000));
 			$BB echo "$CPUFREQ:\"${LABEL} MHz\", ";
@@ -80,6 +86,15 @@ case "$1" in
 			if [ $FREQ -le "2260000" ]; then
 				MAXCPU=$FREQ;
 			fi;
+		done < /sys/devices/system/cpu/cpu0/cpufreq/stats/time_in_state;
+
+		$BB echo $MAXCPU;
+	;;
+	DefaultCPU2MaxFrequency)
+		while read FREQ TIME; do
+			if [ $FREQ -le "2260000" ]; then
+				MAXCPU=$FREQ;
+			fi;
 		done < /sys/devices/system/cpu/cpu4/cpufreq/stats/time_in_state;
 
 		$BB echo $MAXCPU;
@@ -114,6 +129,17 @@ case "$1" in
 		$BB echo $MINCPU;
 	;;
     DefaultCPU1MinFrequency)
+		S=0;
+		while read FREQ TIME; do
+			if [ $FREQ -ge "300000" ] && [ $S -eq "0" ]; then
+				S=1;
+				MINCPU=$FREQ;
+			fi;
+		done < /sys/devices/system/cpu/cpu0/cpufreq/stats/time_in_state;
+
+		$BB echo $MINCPU;
+	;;
+	DefaultCPU2MinFrequency)
 		S=0;
 		while read FREQ TIME; do
 			if [ $FREQ -ge "300000" ] && [ $S -eq "0" ]; then
