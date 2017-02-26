@@ -179,16 +179,16 @@ case "$1" in
 		GPUGOV3=/sys/devices/soc/b00000.qcom,kgsl-3d0/devfreq/b00000.qcom,kgsl-3d0/governor;
 		
 		if [ -f "$GPUGOV" ]; then
-			$BB echo "$GPUGOV";
+			$BB echo "`$BB cat /sys/devices/soc.0/fdb00000.qcom,kgsl-3d0/devfreq/fdb00000.qcom,kgsl-3d0/governor`"
 		fi;
 		if [ -f "$GPUGOV1" ]; then
-			$BB echo "$GPUGOV1";
+			$BB echo "`$BB cat /sys/devices/fdb00000.qcom,kgsl-3d0/devfreq/fdb00000.qcom,kgsl-3d0/governor`"
 		fi;
 		if [ -f "$GPUGOV2" ]; then
-			$BB echo "$GPUGOV2";
-		fi;
+			$BB echo "`$BB cat /sys/devices/platform/kgsl-3d0.0/kgsl/kgsl-3d0/governor`"
+		fi
 		if [ -f "$GPUGOV3" ]; then
-			$BB echo "$GPUGOV3";
+			$BB echo "`$BB cat /sys/devices/soc/b00000.qcom,kgsl-3d0/devfreq/b00000.qcom,kgsl-3d0/governor`"
 		fi;
 	;;
 	DirKernelIMG)
@@ -254,7 +254,7 @@ case "$1" in
     DirGPUGovernor)
 		GPUGOV=/sys/devices/soc.0/fdb00000.qcom,kgsl-3d0/devfreq/fdb00000.qcom,kgsl-3d0/governor;
 		GPUGOV1=/sys/devices/fdb00000.qcom,kgsl-3d0/devfreq/fdb00000.qcom,kgsl-3d0/governor;
-		GPUGOV2=/sys/devices/platform/kgsl-3d0.0/kgsl/kgsl-3d0/governor;
+		GPUGOV2=/sys/devices/platform/kgsl-3d0.0/kgsl/kgsl-3d0/pwrscale/trustzone/governor;
 		GPUGOV3=/sys/devices/soc/b00000.qcom,kgsl-3d0/devfreq/b00000.qcom,kgsl-3d0/governor;
 		
 		if [ -f "$GPUGOV" ]; then
@@ -373,12 +373,7 @@ case "$1" in
 		done;
 	;;
 	GPUGovernorList)
-		$BB echo "msm-adreno-tz","performance", "powersave", "simple_ondemand";
-	;;
-	KRYOGPUGovernorList)
-		for GPUGOV in `$BB cat /sys/devices/soc/b00000.qcom,kgsl-3d0/devfreq/b00000.qcom,kgsl-3d0/available_governors`; do
-			$BB echo "\"$GPUGOV\",";
-		done;
+		$BB echo "msm-adreno-tz","performance", "powersave", "userspace", "cpufreq";
 	;;
 	GPUPowerLevel)
 		GPUPW=/sys/devices/soc.0/fdb00000.qcom,kgsl-3d0/devfreq/fdb00000.qcom,kgsl-3d0/min_freq;
