@@ -59,20 +59,6 @@ cat << CTAG
 						]
 					}},'
 			fi`
-			`if [ -f "\`sh $DEVICE DirKRYOGPUGovernor\`" ]; then
-			GPUGOV=\`sh $DEVICE DirKRYOGPUGovernor\`
-				$BB echo '{ SPane:{
-					title:"GPU Governor",
-					description:"The GPU Governor makes scaling decisions based on specific algorithm for 2D/3D scenarios."
-				}},
-					{ SOptionList:{
-						default:'\`sh $DEVICE DefaultKRYOGPUGovernor\`',
-						action:"gpuset '$GPUGOV'",
-						values:[
-							'\`sh $DEVICE KRYOGPUGovernorList\`'
-						]
-					}},'
-			fi`
 			`SGA=/sys/module/msm_kgsl_core/parameters;
 			if [ -f "$SGA/simple_laziness" ] || [ -f "$SGA/simple_ramp_threshold" ] || [ -d "/sys/module/simple_gpu_algorithm/parameters" ]; then
 
