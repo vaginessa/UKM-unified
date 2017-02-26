@@ -1,5 +1,18 @@
 /
 P/oject name: UKM-unified
+
+26/02/2017
+
+ * misc: add various versions of powersuspend (Slawek) [9ccb750]
+  * refresh: reduce refresh rate (Slawek) [cd6f73c]
+  * live: remove doubled gpu rfequency (Slawek) [7c7bc15]
+  * gpu: add more frequency scaling paths and merge kryo (Slawek) [e1b4106]
+  * actions: add missing adreno idler (Slawek) [f29df9b]
+  * gamma: add kcal on/off toggle (Slawek) [902f70c]
+  * info remove speedbin (Slawek) [67603ee]
+  * misc: rmove leds control (Slawek) [03ea904]
+  * cpufreq: corect paths for cpu frequencies (Slawek) [e499160]
+
 19/02/2017
 
   * device: fix cpu temp status and remove Farenheits - we going to use Imperial only (Slawek) [b644623]
