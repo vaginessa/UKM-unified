@@ -6,7 +6,7 @@ cat << CTAG
 				title:"Battery Temperature:"
 			}},
 				{ SLiveLabel:{
-					refresh:3000,
+					refresh:2000,
 					style:italic,
 					action:"live BatteryTemperature"
 				}},
@@ -14,7 +14,7 @@ cat << CTAG
 				title:"CPU Temperature:"
 			}},
 				{ SLiveLabel:{
-					refresh:3000,
+					refresh:2000,
 					style:italic,
 					action:"live CPUTemperature"
 				}},
@@ -22,7 +22,7 @@ cat << CTAG
 				title:"Memory:"
 			}},
 				{ SLiveLabel:{
-					refresh:3000,
+					refresh:2000,
 					style:italic,
 					action:"live Memory"
 				}},
