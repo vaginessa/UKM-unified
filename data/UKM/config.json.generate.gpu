@@ -10,11 +10,6 @@ cat << CTAG
 					style:italic,
 					action:"live GPUFrequency"
 				}},
-				{ SLiveLabel:{
-					refresh:1000,
-					style:italic,
-					action:"live KRYOGPUFrequency"
-				}},
 			{ SPane:{
 				title:"GPU Frequency Scaling",
 			}},
@@ -30,18 +25,6 @@ cat << CTAG
 						}
 					}},'
 				fi`
-				`if [ -f "\`sh $DEVICE DirKRYOGPUMinPwrLevel\`" ]; then
-				GPUMIN=\`sh $DEVICE DirKRYOGPUMinPwrLevel\`
-					$BB echo '{ SSeekBar:{
-						title:"GPU Min Frequency",
-						description:"Set the minimum frequency the GPU scales down to.",
-						default:'\`$BB cat $GPUMIN\`',
-						action:"gpuset '$GPUMIN'",
-						values:{
-							'\`sh $DEVICE GPUKRYOPowerLevel\`'
-						}
-					}},'
-				fi`
 				`if [ -f "\`sh $DEVICE DirGPUMaxFrequency\`" ]; then
 				GPUMAX=\`sh $DEVICE DirGPUMaxFrequency\`
 					$BB echo '{ SSeekBar:{
@@ -51,18 +34,6 @@ cat << CTAG
 						action:"generic '$GPUMAX'",
 						values:{
 							'\`sh $DEVICE GPUFrequencyList\`'
-						}
-				}},'
-                fi`
-				`if [ -f "\`sh $DEVICE DirKRYOGPUMaxFrequency\`" ]; then
-				GPUMAX=\`sh $DEVICE DirKRYOGPUMaxFrequency\`
-					$BB echo '{ SSeekBar:{
-						title:"GPU Max Frequency",
-						description:"Set the maximum frequency the GPU scales up to.",
-						default:'\`$BB cat $GPUMAX\`',
-						action:"generic '$GPUMAX'",
-						values:{
-							'\`sh $DEVICE GPUKRYOFrequencyList\`'
 						}
 				}},'
 					$BB echo '{ SButton:{

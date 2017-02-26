@@ -27,9 +27,6 @@ case $1 in
 	GPUFrequency)
 		$BB echo `sh $DEVICE LiveGPUFrequency`;
 	;;
-	KRYOGPUFrequency)
-		$BB echo `sh $DEVICE LiveKRYOGPUFrequency`;
-	;;
 	CPUTemperature)
 		$BB echo `sh $DEVICE LiveCPUTemperature`;
 	;;
