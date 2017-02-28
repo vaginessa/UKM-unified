@@ -202,10 +202,37 @@ cat << CTAG
 							action:"generic /sys/module/cpu_boost/parameters/sysctl_thermal_aware_scheduling",
 						}},'
 					fi
-				fi`
-				{ SSpacer:{
+					$BB echo '{ SSpacer:{
 						height: 1
-				}},
+					}},'
+				fi`
+			    `if [ -d "/sys/kernel/cpu_input_boost" ]; then
+				    $BB echo '{ SPane:{
+					    title:"Input Boost driver developed by Sultanxda"
+				    }},'
+				    if [ -f "/sys/kernel/cpu_input_boost/enabled" ]; then
+					    INB=\`$BB cat /sys/kernel/cpu_input_boost/enabled\`
+						$BB echo '{ SCheckBox:{
+							label:"Enable",
+							description:"Enable/Disable Input Boost",
+							default:'$INB',
+							action:"generic /sys/kernel/cpu_input_boost/enabled"
+						}},'
+					fi
+				    if [ -f "/sys/kernel/cpu_input_boost/ib_duration_ms" ]; then
+					    INB=\`$BB cat /sys/kernel/cpu_input_boost/ib_duration_ms\`
+					    $BB echo '{ SSeekBar:{
+						    title:"Input Boost Duration",
+						    description:"Sets input boost duration in ms.",
+                            unit:"ms",
+						    min:0,
+						    max:5000,
+						    step:10,
+						    default:'$INB',
+						    action:"generic /sys/kernel/cpu_input_boost/ib_duration_ms",
+					    }},'
+				    fi
+				fi`
 		]
 }
 CTAG
