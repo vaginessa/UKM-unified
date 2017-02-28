@@ -503,6 +503,8 @@ case "$1" in
 		$BB echo "Core 0: $CPU0@nCore 1: $CPU1@nCore 2: $CPU2@nCore 3: $CPU3";
 	;;
  	LiveCPU2Frequency)
+		LCPU=/sys/devices/system/cpu/cpu6/cpufreq/scaling_cur_freq;
+		
 		CPU0=`$BB cat /sys/devices/system/cpu/cpu4/cpufreq/scaling_cur_freq 2> /dev/null`;
 		CPU1=`$BB cat /sys/devices/system/cpu/cpu5/cpufreq/scaling_cur_freq 2> /dev/null`;
 		CPU2=`$BB cat /sys/devices/system/cpu/cpu6/cpufreq/scaling_cur_freq 2> /dev/null`;
@@ -513,7 +515,11 @@ case "$1" in
 		if [ -z "$CPU6" ]; then CPU6="Offline"; else CPU6="$((CPU6 / 1000)) MHz"; fi;
 		if [ -z "$CPU7" ]; then CPU7="Offline"; else CPU7="$((CPU7 / 1000)) MHz"; fi;
 		
+		if [ -f "$LCPU" ]; then 
 		$BB echo "Core 4: $CPU4@nCore 5: $CPU5@nCore 6: $CPU6@nCore 7: $CPU7";
+		else
+		$BB echo "Core 4: $CPU4@nCore 5: $CPU5";
+		fi;
 	;;
     LiveKRYO1Frequency)
 		CPU0=`$BB cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_cur_freq 2> /dev/null`;
