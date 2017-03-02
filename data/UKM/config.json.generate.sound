@@ -256,7 +256,7 @@ cat << CTAG
 						max:20,
 						step:1,
 						default:'$HPG',
-						action:"generic /sys/kernel/sound_control/headphone_gain"
+						action:"sound /sys/kernel/sound_control/headphone_gain"
 					}},'
 				fi
 				if [ -f "/sys/kernel/sound_control/mic_gain" ]; then
