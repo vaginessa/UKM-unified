@@ -161,16 +161,49 @@ cat << CTAG
 							fi;
 					done < /sys/devices/system/cpu/cpu0/cpufreq/gpu_mv_table
 			fi`
-			`if [ -f "/sys/devices/soc/b00000.qcom,kgsl-3d0/devfreq/b00000.qcom,kgsl-3d0/adrenoboost" ]; then
+			`if [ -f "/sys/devices/soc.0/fdb00000.qcom,kgsl-3d0/devfreq/fdb00000.qcom,kgsl-3d0/adrenoboost" -o -f "/sys/devices/fdb00000.qcom,kgsl-3d0/devfreq/fdb00000.qcom,kgsl-3d0/adrenoboost" -o -f "/sys/devices/platform/kgsl-3d0.0/kgsl/kgsl-3d0/adrenoboost" -o -f "/sys/class/kgsl/kgsl-3d0/devfreq/adrenoboost" ]; then
 				$BB echo '{ SPane:{
 					title:"Adrenoboost"
 				}},'
-				if [ -f "/sys/devices/soc/b00000.qcom,kgsl-3d0/devfreq/b00000.qcom,kgsl-3d0/adrenoboost" ]; then
-				PSM=\`$BB cat /sys/devices/soc/b00000.qcom,kgsl-3d0/devfreq/b00000.qcom,kgsl-3d0/adrenoboost\`
+				if [ -f "/sys/devices/soc.0/fdb00000.qcom,kgsl-3d0/devfreq/fdb00000.qcom,kgsl-3d0/adrenoboost" ]; then
+				ADB=\`$BB cat /sys/devices/soc.0/fdb00000.qcom,kgsl-3d0/devfreq/fdb00000.qcom,kgsl-3d0/adrenoboost\`
 					$BB echo '{ SOptionList:{
 						description:"Gpu scaling driver .",
-						default:'$PSM',
-						action:"generic /sys/devices/soc/b00000.qcom,kgsl-3d0/devfreq/b00000.qcom,kgsl-3d0/adrenoboost",
+						default:'$ADB',
+						action:"generic /sys/devices/soc.0/fdb00000.qcom,kgsl-3d0/devfreq/fdb00000.qcom,kgsl-3d0/adrenoboost",
+						values:{
+							0:"Off", 1:"Low",2:"Medium", 3:"Agressive",
+						}
+					}},'
+				fi
+				if [ -f "/sys/devices/fdb00000.qcom,kgsl-3d0/devfreq/fdb00000.qcom,kgsl-3d0/adrenoboost" ]; then
+				ADB=\`$BB cat /sys/devices/fdb00000.qcom,kgsl-3d0/devfreq/fdb00000.qcom,kgsl-3d0/adrenoboost\`
+					$BB echo '{ SOptionList:{
+						description:"Gpu scaling driver .",
+						default:'$ADB',
+						action:"generic /sys/devices/fdb00000.qcom,kgsl-3d0/devfreq/fdb00000.qcom,kgsl-3d0/adrenoboost",
+						values:{
+							0:"Off", 1:"Low",2:"Medium", 3:"Agressive",
+						}
+					}},'
+				fi
+				if [ -f "/sys/devices/platform/kgsl-3d0.0/kgsl/kgsl-3d0/adrenoboost" ]; then
+				ADB=\`$BB cat /sys/devices/platform/kgsl-3d0.0/kgsl/kgsl-3d0/adrenoboost\`
+					$BB echo '{ SOptionList:{
+						description:"Gpu scaling driver .",
+						default:'$ADB',
+						action:"generic /sys/devices/platform/kgsl-3d0.0/kgsl/kgsl-3d0/adrenoboost",
+						values:{
+							0:"Off", 1:"Low",2:"Medium", 3:"Agressive",
+						}
+					}},'
+				fi
+				if [ -f "/sys/class/kgsl/kgsl-3d0/devfreq/adrenoboost" ]; then
+				ADB=\`$BB cat /sys/class/kgsl/kgsl-3d0/devfreq/adrenoboost\`
+					$BB echo '{ SOptionList:{
+						description:"Gpu scaling driver .",
+						default:'$ADB',
+						action:"generic /sys/class/kgsl/kgsl-3d0/devfreq/adrenoboost",
 						values:{
 							0:"Off", 1:"Low",2:"Medium", 3:"Agressive",
 						}
