@@ -158,6 +158,36 @@ cat << CTAG
 					}},'
 				fi
 			fi`
+            `if [ -f "/sys/class/misc/btk_control/btkc_mode" ]; then
+				$BB echo '{ SPane:{
+					title:"Boeffla Touchkey Control"
+				}},'
+				if [ -f "/sys/class/misc/btk_control/btkc_mode" ]; then
+				BTC=\`$BB cat /sys/class/misc/btk_control/btkc_mode\`
+					$BB echo '{ SOptionList:{
+						title:"Touchkey Control",
+						description:"Touchkey driver to control key backlight developed by Lord Boeffla.",
+						default:'$BTC',
+						action:"generic /sys/class/misc/btk_control/btkc_mode",
+						values:{
+							0:"Normal Mode", 1:"Lit When Pressed", 2:"Lights Always Off",
+						}
+					}},'
+				fi
+				if [ -f "/sys/class/misc/btk_control/btkc_timeout" ]; then
+				BTT=\`$BB cat /sys/class/misc/btk_control/btkc_timeout\`
+					$BB echo '{ SSeekBar:{
+						title:"Touch Key lights Timeout",
+						description:"Sets touchkey timeout.",
+						unit:" ms",
+						min:0,
+						max:30000,
+						step:1000,
+						default:'$BTT',
+						action:"generic /sys/class/misc/btk_control/btkc_timeout"
+					}},'
+				fi
+			fi`
 			`if [ -f "/sys/class/timed_output/vibrator/amp" ]; then
 			VIBRATOR=\`$BB cat /sys/class/timed_output/vibrator/amp\`
 				$BB echo '{ SPane:{
