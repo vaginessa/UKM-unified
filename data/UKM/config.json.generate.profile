@@ -3,52 +3,6 @@ cat << CTAG
     name:PROFILE,
     elements:[
 		{ STitleBar:{
-			title:"Profiles"
-		}},
-			{ SOptionList:{
-				title:"Selected Profile",
-				description:"Choose the settings you want and apply your choice in Synapse before using the action buttons below.",
-				action:"restorebackup pickprofile",
-				default:"None",
-				values:[ "None",
-					`for BAK in \`$UKM/actions/restorebackup listprofile\`; do
-						echo "\"$BAK\","
-					done`
-				],
-				notify:[
-					{
-						on:APPLY,
-						do:[ REFRESH, APPLY ],
-						to:"generic $UKM/files/bck_prof"
-					}
-				]
-			}},
-			{ SDescription:{
-				description:"NOTE: After you restore a profile, you have to press the X button on top to load the settings."
-			}},
-			{ SButton:{
-				label:"Restore Selected Profile",
-				action:"restorebackup applyprofile",
-				notify:[
-					{
-						on:APPLY,
-						do:[ REFRESH, APPLY ],
-						to:"restorebackup pickprofile"
-					}
-				]
-			}},
-			{ SButton:{
-				label:"Delete Selected Profile",
-				action:"restorebackup delprofile",
-				notify:[
-					{
-						on:APPLY,
-						do:[ REFRESH, APPLY ],
-						to:"restorebackup pickprofile"
-					}
-				]
-			}},
-		{ SPane:{
 			title:"Configs"
 		}},
 			{ SOptionList:{
