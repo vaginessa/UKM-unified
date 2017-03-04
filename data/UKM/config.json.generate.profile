@@ -60,17 +60,6 @@ cat << CTAG
 				description:"First set a name above and apply. After this you can press the Backup Current Profile or Export Current Config button below."
 			}},
 			{ SButton:{
-				label:"Backup Current Profile",
-				action:"restorebackup keepprofile",
-				notify:[
-					{
-						on:APPLY,
-						do:[ REFRESH, APPLY ],
-						to:"generic $UKM/files/bck_prof"
-					}
-				]
-			}},
-			{ SButton:{
 				label:"Export Current Config",
 				action:"sqlite ExportConfigSynapse",
 				notify:[
