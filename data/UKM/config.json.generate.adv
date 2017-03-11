@@ -280,8 +280,8 @@ cat << CTAG
 						action:"generic /sys/kernel/sched/gentle_fair_sleepers"
 					}},'
 			fi`
-			`if [ -f "/sys/module/wakeup/parameters/enable_si_ws" ]; then
-				WSI=\`bool /sys/module/wakeup/parameters/enable_si_ws\`;
+			`if [ -f "/sys/module/wakeup/parameters/enable_ipa_ws" ]; then
+				WSI=\`bool /sys/module/wakeup/parameters/enable_ipa_ws\`;
 				$BB echo '{ SPane:{
 						title:"Wakelock Control",
 						description:"Wakelocks are power-managing software mechanisms, which make sure that your Android device does not go into deep sleep. It is an advanced feature so you have to pay close attention how use it."
@@ -291,35 +291,23 @@ cat << CTAG
 					}},
 					{ SCheckBox:{
 						label:"Wakelock Enabled",
-						description:"If disabled skip - sensor_ind - (Proximity Sensor)",
+						description:"If disabled skip - ipa_ws wakelock",
 						default:'$WSI',
-						action:"boolean /sys/module/wakeup/parameters/enable_si_ws"
+						action:"boolean /sys/module/wakeup/parameters/enable_ipa_ws"
 					}},'
 			fi`
-                        `if [ -f "/sys/module/wakeup/parameters/enable_msm_hsic_ws" ]; then
-                                WHSIC=\`bool /sys/module/wakeup/parameters/enable_msm_hsic_ws\`;
-                                $BB echo '{ SSpacer:{
-                                                height: 1
-                                        }},
-                                        { SCheckBox:{
-                                                label:"Wakelock Enabled",
-                                                description:"If disabled skip - msm_hsic - (Modem)",
-                                                default:'$WHSIC',
-                                                action:"boolean /sys/module/wakeup/parameters/enable_msm_hsic_ws"
-                                        }},'
-                        fi`
-			`if [ -f "/sys/module/wakeup/parameters/enable_bluedroid_timer_ws" ]; then
-				WBD=\`bool /sys/module/wakeup/parameters/enable_bluedroid_timer_ws\`;
-				$BB echo '{ SSpacer:{
-						height: 1
-					}},
-					{ SCheckBox:{
-						label:"Wakelock Enabled",
-						description:"If disabled skip - bluedroid_timer - (Bluetooth)",
-						default:'$WBD',
-						action:"boolean /sys/module/wakeup/parameters/enable_bluedroid_timer_ws"
-					}},'
-			fi`
+            `if [ -f "/sys/module/wakeup/parameters/enable_msm_hsic_ws" ]; then
+                WHSIC=\`bool /sys/module/wakeup/parameters/enable_msm_hsic_ws\`;
+                $BB echo '{ SSpacer:{
+                        height: 1
+                    }},
+                    { SCheckBox:{
+                        label:"Wakelock Enabled",
+                        description:"If disabled skip - msm_hsic - (Modem)",
+                        default:'$WHSIC',
+                        action:"boolean /sys/module/wakeup/parameters/enable_msm_hsic_ws"
+                    }},'
+            fi`
 			`if [ -f "/sys/module/wakeup/parameters/enable_bluesleep_ws" ]; then
 				WBS=\`bool /sys/module/wakeup/parameters/enable_bluesleep_ws\`;
 				$BB echo '{ SSpacer:{
@@ -399,6 +387,102 @@ cat << CTAG
 						description:"Enable/Disable msm_hsic_host wakelock.",
 						default:'$MHH',
 						action:"boolean /sys/module/wakeup/parameters/enable_msm_hsic_ws"
+					}},'
+			fi`
+			`if [ -f "/sys/module/wakeup/parameters/enable_netlink_ws" ]; then
+			MHH=\`bool /sys/module/wakeup/parameters/enable_netlink_ws\`;
+				$BB echo '{ SPane:{
+					title:"Netlink_ws wakelock",
+				}},
+					{ SCheckBox:{
+						label:"Enable",
+						description:"Enable/Disable Netlink_ws wakelock.",
+						default:'$MHH',
+						action:"boolean /sys/module/wakeup/parameters/enable_netlink_ws"
+					}},'
+			fi`
+			`if [ -f "/sys/module/wakeup/parameters/enable_netmgr_wl_ws" ]; then
+			MHH=\`bool /sys/module/wakeup/parameters/enable_netmgr_wl_ws\`;
+				$BB echo '{ SPane:{
+					title:"Netmgr_wl_wss wakelock",
+				}},
+					{ SCheckBox:{
+						label:"Enable",
+						description:"Enable/Disable netmgr_wl_ws wakelock.",
+						default:'$MHH',
+						action:"boolean /sys/module/wakeup/parameters/enable_netmgr_wl_ws"
+					}},'
+			fi`
+			`if [ -f "/sys/module/wakeup/parameters/enable_qcom_rx_wakelock_ws" ]; then
+			MHH=\`bool /sys/module/wakeup/parameters/enable_qcom_rx_wakelock_ws\`;
+				$BB echo '{ SPane:{
+					title:"Qcom_rx_wakelock_ws wakelock",
+				}},
+					{ SCheckBox:{
+						label:"Enable",
+						description:"Enable/Disable qcom_rx_wakelock_ws wakelock.",
+						default:'$MHH',
+						action:"boolean /sys/module/wakeup/parameters/enable_qcom_rx_wakelock_ws"
+					}},'
+			fi`
+			`if [ -f "/sys/module/wakeup/parameters/enable_timerfd_ws" ]; then
+			MHH=\`bool /sys/module/wakeup/parameters/enable_timerfd_ws\`;
+				$BB echo '{ SPane:{
+					title:"Timerfd_ws wakelock",
+				}},
+					{ SCheckBox:{
+						label:"Enable",
+						description:"Enable/Disable timerfd_ws wakelock.",
+						default:'$MHH',
+						action:"boolean /sys/module/wakeup/parameters/enable_timerfd_ws"
+					}},'
+			fi`
+			`if [ -f "/sys/module/wakeup/parameters/enable_wlan_extscan_wl_ws" ]; then
+			MHH=\`bool /sys/module/wakeup/parameters/enable_wlan_extscan_wl_ws\`;
+				$BB echo '{ SPane:{
+					title:"Wlan_extscan_wl_ws wakelock",
+				}},
+					{ SCheckBox:{
+						label:"Enable",
+						description:"Enable/Disable wlan_extscan_wl_ws wakelock.",
+						default:'$MHH',
+						action:"boolean /sys/module/wakeup/parameters/enable_wlan_extscan_wl_ws"
+					}},'
+			fi`
+			`if [ -f "/sys/module/wakeup/parameters/enable_wlan_wow_wl_ws" ]; then
+			MHH=\`bool /sys/module/wakeup/parameters/enable_wlan_wow_wl_ws\`;
+				$BB echo '{ SPane:{
+					title:"Wlan_wow_wl_ws wakelock.",
+				}},
+					{ SCheckBox:{
+						label:"Enable",
+						description:"Enable/Disable wlan_wow_wl_ws wakelock.",
+						default:'$MHH',
+						action:"boolean /sys/module/wakeup/parameters/enable_wlan_wow_wl_ws"
+					}},'
+			fi`
+			`if [ -f "/sys/module/wakeup/parameters/enable_wlan_ws" ]; then
+			MHH=\`bool /sys/module/wakeup/parameters/enable_wlan_ws\`;
+				$BB echo '{ SPane:{
+					title:"Wlan_ws wakelock.",
+				}},
+					{ SCheckBox:{
+						label:"Enable",
+						description:"Enable/Disable wlan_ws wakelock.",
+						default:'$MHH',
+						action:"boolean /sys/module/wakeup/parameters/enable_wlan_ws"
+					}},'
+			fi`
+			`if [ -f "/sys/module/wakeup/parameters/enable_bluedroid_timer_ws" ]; then
+			MHH=\`bool /sys/module/wakeup/parameters/enable_bluedroid_timer_ws\`;
+				$BB echo '{ SPane:{
+					title:"Bluedroid_timer_ws wakelock.",
+				}},
+					{ SCheckBox:{
+						label:"Enable",
+						description:"Enable/Disable bluedroid_timer_ws.",
+						default:'$MHH',
+						action:"boolean /sys/module/wakeup/parameters/enable_bluedroid_timer_ws"
 					}},'
 			fi`
 			`if [ -d "/sys/class/leds" ]; then
