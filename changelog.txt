@@ -1,6 +1,28 @@
 /
 P/oject name: UKM-unified
 
+12/03/17
+
+  * UKM: add latest version of Synapse (Slawek) [98c6e4c]
+  * UKM: Synapse flashed with UKM as default (Slawek) [1d2293e]
+  * Device.sh: Max Cpu add variable for 4 and 8 cores (Slawek) [268d7b3]
+  * Hotplug: Add Lazyplug (Slawek) [3af58f1]
+  * Hotplug: Autosmp add boost tunables (Slawek) [f682563]
+  * Advanced: add more wakelock controls (Slawek) [cecf8b0]
+  * gamma: bring back tunables from original gamma file (Slawek) [c61a00b]
+  * profile: remove rest of profile restoring (Slawek) [8b95586]
+  * cpuset: add paths for all cpus (Slawek) [1026aed]
+  * profiles: change to configs (Slawek) [e4e163f]
+  * restore backup: added paths from original ukm (Slawek) [7444843]
+  * device: correct cpu numbers (Slawek) [5ad3bcc]
+  * generate: add path for flars sound control (Slawek) [254b0bd]
+  * GPU: some devices have same path for gpu lets try it, also enabled adreno boost (Slawek) [ac0639d]
+  * misc: add Boeffla touchkey controll support (Slawek) [58b45f6]
+  * live cpu: make core 6 & 7 optional (Slawek) [916a0a0]
+  * cpu boost: add support for input boost driver by sultanxda (Slawek) [bb6bd66]
+  * gpu: more governors (Slawek) [acd15f6]
+  * gpu: governors for various devices (Slawek) [85ca057]
+
 26/02/2017
 
  * misc: add various versions of powersuspend (Slawek) [9ccb750]
