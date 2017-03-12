@@ -954,10 +954,13 @@ case "$1" in
 		$BB echo $WL;
 	;;
 	MaxCPU)
-		$BB echo "4";
-	;;
-	MaxCPU1)
-		$BB echo "8";
+		MAXCPU=/sys/devices/system/cpu/cpu4/cpufreq/scaling_cur_freq;
+		
+		if [ -f "$MAXCPU" ]; then
+			$BB echo "8"
+		else
+			$BB echo "4"
+		fi;
 	;;
 	MinFreqIndex)
 		ID=0;
