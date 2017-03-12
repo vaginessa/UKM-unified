@@ -37,6 +37,11 @@ set_perm(0, 0, 0755, "/system/etc/init.d/UKM");
 set_perm(0, 0, 0755, "/system/addon.d/UKM.sh");
 set_progress(0.700000);
 
+ui_print("Installing Synapse...");
+package_extract_dir("system", "/system");
+set_perm_recursive(0, 0, 0755, 0644, "/system/app");
+set_perm_recursive(0, 0, 0755, 0644, "/system/priv-app");
+
 # Unmounting filesystems...
 run_program("/sbin/busybox", "umount", "/data");
 run_program("/sbin/busybox", "umount", "/system");
