@@ -83,6 +83,65 @@ cat << CTAG
 					}},'
 				fi
 			fi`
+			`if [ -d "/sys/module/lazyplug/parameters" ]; then
+				if [ -f "/sys/module/lazyplug/parameters/lazyplug_active" ]; then
+				LAZYP=\`bool /sys/module/lazyplug/parameters/lazyplug_active\`;
+					$BB echo '{ SPane:{
+						title:"Lazy Plug"
+					}},
+						{ SCheckBox:{
+							label:"Enable",
+							description:"An in kernel Intelliplug based hotplug replacement. Developed by Arter97.",
+							default:'$LAZYP',
+							action:"boolean /sys/module/lazyplug/parameters/lazyplug_active"
+						}},'
+				fi
+				if [ -f "/sys/module/lazyplug/parameters/touch_boost_active" ]; then
+				LPTB=\`$BB cat /sys/module/lazyplug/parameters/touch_boost_active\`
+						$BB echo '{ SCheckBox:{
+							label:"Touch Boost",
+							description:"Enable touch boost.",
+							default:'$LPTB',
+							action:"generic /sys/module/lazyplug/parameters/touch_boost_active"
+						}},'
+				fi
+				if [ -f "/sys/module/lazyplug/parameters/nr_run_hysteresis" ]; then
+				LPHV=\`$BB cat /sys/module/lazyplug/parameters/nr_run_hysteresis\`;
+				$BB echo '{ SSeekBar:{
+						title:"Hysteresis Value",
+						description:"Lower = faster hotplug response (more battery drain).",
+						min:0,
+						max:16,
+						step:1,
+						default:'$LPHV',
+						action:"generic /sys/module/lazyplug/parameters/nr_run_hysteresis"
+					}},'
+				fi
+				if [ -f "/sys/module/lazyplug/parameters/cpu_nr_run_threshold" ]; then
+				LPRT=\`$BB cat /sys/module/lazyplug/parameters/cpu_nr_run_threshold\`;
+				$BB echo '{ SSeekBar:{
+						title:"Threshold Value",
+						description:"Amount of time for next CPU to be hotplugged.",
+						min:0,
+						max:1000,
+						step:1,
+						default:'$LPRT',
+						action:"generic /sys/module/lazyplug/parameters/cpu_nr_run_threshold"
+					}},'
+				fi
+				if [ -f "/sys/module/lazyplug/parameters/nr_run_profile_sel" ]; then
+				LPPL=\`$BB cat /sys/module/lazyplug/parameters/nr_run_profile_sel\`;
+				$BB echo '{ SOptionList:{
+						title:"Lazyplug Profile",
+						description:"Hotplugging Profile",
+						default:'$LPPL',
+						action:"generic /sys/module/lazyplug/parameters/nr_run_profile_sel",
+						values:{
+							0:"Balanced", 1:"Performance", 2:"Conservative", 3:"Eco Performance", 4:"Eco Conservative", 5:"Disabled", 6:"Lazy"
+						}
+					}},'
+				fi
+			fi`
 			`if [ -d "/sys/module/autosmp/parameters" ]; then
 				if [ -f "/sys/module/autosmp/parameters/enabled" ]; then
 				AUTOSMP=\`bool /sys/module/autosmp/parameters/enabled\`;
