@@ -187,12 +187,50 @@ cat << CTAG
 				DL=\`$BB cat /sys/kernel/autosmp/conf/delay\`
 						$BB echo '{ SSeekBar:{
 							title:"Delay",
+							description:"Time until next hotplug event.",
 							min:0,
 							max:500,
 							step:10,
 							default:'$DL',
 							action:"generic /sys/kernel/autosmp/conf/delay"
 						}},'
+				fi
+				if [ -f "/sys/kernel/autosmp/conf/cpus_boosted" ]; then
+				MAXCPU=\`$BB cat /sys/kernel/autosmp/conf/cpus_boosted\`
+						$BB echo '{ SSeekBar:{
+							title:"Max CPUs",
+							description:"Maximum CPUs Boosted.",
+							min:1,
+							max:'
+								sh $DEVICE MaxCPU
+							$BB echo ',
+							step:1,
+							default:'$MAXCPU',
+							action:"generic /sys/kernel/autosmp/conf/cpus_boosted",
+						}},'
+				fi
+				if [ -f "/sys/kernel/autosmp/conf/boost_lock_duration" ]; then
+				DL=\`$BB cat /sys/kernel/autosmp/conf/boost_lock_duration\`
+						$BB echo '{ SSeekBar:{
+							title:"Boost Duration",
+							description:"Hotplug boost duration time.",
+							min:0,
+							max:5000,
+							step:10,
+							unit:"ms",
+							default:'$DL',
+							action:"generic /sys/kernel/autosmp/conf/boost_lock_duration"
+						}},'
+				fi
+				if [ -f "/sys/kernel/autosmp/conf/min_boost_freq" ]; then
+					$BB echo '{ SSeekBar:{
+						title:"Minimum Boost Frequency",
+						description:"",
+						action:"generic /sys/kernel/autosmp/conf/min_boost_freq",
+						values:{'
+							sh $DEVICE CPUFrequencyList
+						$BB echo '}
+					}},'
 				fi
 			fi`
 			`if [ -f "/sys/module/msm_performance/parameters/num_clusters" ]; then
