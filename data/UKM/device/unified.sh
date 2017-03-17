@@ -1157,10 +1157,10 @@ case "$1" in
 			$BB echo "CPU 2"
 	;;
 	LiveKRYO1)
-			$BB echo "Kryo 2.2 Cluster"
+			$BB echo "Kryo 1.6 Cluster"
 	;;
 	LiveKRYO2)
-			$BB echo "Kryo 1.6 Cluster"
+			$BB echo "Kryo 2.2 Cluster"
 	;;
 	LiveCpuBoost)
 			$BB echo "CPU Boost"
