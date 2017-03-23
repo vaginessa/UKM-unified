@@ -1,6 +1,17 @@
 /
 P/oject name: UKM-unified
 
+23/03/17
+
+  * hotplug: msm performance adjust and add disable knob (Slawek) [67a0692]
+  * hotplug: Core Control add missing support for a57 cluster (Slawek) [73d929c]
+  * device.sh: add support for hexa core msm8956 soc (Slawek) [375aca4]
+  * hotplug: Lazyplug fix enable switch (Slawek) [ea07244]
+  * device.sh: Corect Kyro clusters naming (Slawek) [b750a10]
+  * update busybox (Slawek) [fec09af]
+  * cpuboost: add input boost toggle (Slawek) [cb5e78d]
+  * changelog: update (Slawek) [7d4ec39]
+
 12/03/17
 
   * UKM: add latest version of Synapse (Slawek) [98c6e4c]
