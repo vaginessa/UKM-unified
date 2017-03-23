@@ -85,7 +85,7 @@ cat << CTAG
 			fi`
 			`if [ -d "/sys/module/lazyplug/parameters" ]; then
 				if [ -f "/sys/module/lazyplug/parameters/lazyplug_active" ]; then
-				LAZYP=\`bool /sys/module/lazyplug/parameters/lazyplug_active\`;
+				LAZYP=\`$BB cat /sys/module/lazyplug/parameters/lazyplug_active\`;
 					$BB echo '{ SPane:{
 						title:"Lazy Plug"
 					}},
@@ -93,7 +93,7 @@ cat << CTAG
 							label:"Enable",
 							description:"An in kernel Intelliplug based hotplug replacement. Developed by Arter97.",
 							default:'$LAZYP',
-							action:"boolean /sys/module/lazyplug/parameters/lazyplug_active"
+							action:"generic /sys/module/lazyplug/parameters/lazyplug_active"
 						}},'
 				fi
 				if [ -f "/sys/module/lazyplug/parameters/touch_boost_active" ]; then
