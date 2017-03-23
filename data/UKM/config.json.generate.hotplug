@@ -470,12 +470,12 @@ cat << CTAG
 					{ SLiveLabel:{
 						refresh:0,
 						style:italic,
-						action:"live CpuClusterA53"
+						action:"live CpuCluster"
 					}},'
 				if [ -f "/sys/devices/system/cpu/cpu0/core_ctl/min_cpus" ]; then
 				MINCPU=\`$BB cat /sys/devices/system/cpu/cpu0/core_ctl/min_cpus\`;
 					$BB echo '{ SSeekBar:{
-						title:"Min CPUs Online A53",
+						title:"Min CPUs Online ",
 						description:"Minimum CPUs online at any time.",
 						min:1,
 						max:'
@@ -489,7 +489,7 @@ cat << CTAG
 				if [ -f "/sys/devices/system/cpu/cpu0/core_ctl/max_cpus" ]; then
 				MAXCPU=\`$BB cat /sys/devices/system/cpu/cpu0/core_ctl/max_cpus\`;
 					$BB echo '{ SSeekBar:{
-						title:"Max CPUs Online A53",
+						title:"Max CPUs Online ",
 						description:"Maximum CPUs online at any time.",
 						min:1,
 						max:'
@@ -610,12 +610,12 @@ cat << CTAG
 					{ SLiveLabel:{
 						refresh:0,
 						style:italic,
-						action:"live CpuClusterA57"
+						action:"live CpuCluster"
 					}},'
 				if [ -f "/sys/devices/system/cpu/cpu2/core_ctl/min_cpus" ]; then
 				MINCPU=\`$BB cat /sys/devices/system/cpu/cpu2/core_ctl/min_cpus\`;
 					$BB echo '{ SSeekBar:{
-						title:"Min CPUs Online A57",
+						title:"Min CPUs Online ",
 						description:"Minimum CPUs online at any time.",
 						min:0,
 						max:'
@@ -629,7 +629,7 @@ cat << CTAG
 				if [ -f "/sys/devices/system/cpu/cpu2/core_ctl/max_cpus" ]; then
 				MAXCPU=\`$BB cat /sys/devices/system/cpu/cpu2/core_ctl/max_cpus\`;
 					$BB echo '{ SSeekBar:{
-						title:"Max CPUs Online A57",
+						title:"Max CPUs Online ",
 						description:"Maximum CPUs online at any time.",
 						min:1,
 						max:'
@@ -740,6 +740,149 @@ cat << CTAG
 							description:"",
 							default:'cat /sys/devices/system/cpu/cpu2/core_ctl/hc_correl_use_pcost',
 							action:"generic /sys/devices/system/cpu/cpu2/core_ctl/hc_correl_use_pcost"
+						}},'
+				fi
+				$BB echo '{ SSpacer:{
+						height: 1
+				}},'
+			fi`
+			`if [ -f "/sys/devices/system/cpu/cpu4/core_ctl/is_big_cluster" ]; then
+				$BB echo '{ SSpacer:{
+						height: 3
+					}},
+					{ SLiveLabel:{
+						refresh:0,
+						style:italic,
+						action:"live CpuCluster"
+					}},'
+				if [ -f "/sys/devices/system/cpu/cpu4/core_ctl/min_cpus" ]; then
+				MINCPU=\`$BB cat /sys/devices/system/cpu/cpu4/core_ctl/min_cpus\`;
+					$BB echo '{ SSeekBar:{
+						title:"Min CPUs Online ",
+						description:"Minimum CPUs online at any time.",
+						min:0,
+						max:'
+							sh $DEVICE MaxCPU
+						$BB echo ',
+						step:1,
+						default:4,
+						action:"generic /sys/devices/system/cpu/cpu4/core_ctl/min_cpus"
+					}},'
+				fi
+				if [ -f "/sys/devices/system/cpu/cpu4/core_ctl/max_cpus" ]; then
+				MAXCPU=\`$BB cat /sys/devices/system/cpu/cpu4/core_ctl/max_cpus\`;
+					$BB echo '{ SSeekBar:{
+						title:"Max CPUs Online ",
+						description:"Maximum CPUs online at any time.",
+						min:1,
+						max:'
+							sh $DEVICE MaxCPU
+						$BB echo ',
+						step:1,
+						default:'$MAXCPU',
+						action:"generic /sys/devices/system/cpu/cpu4/core_ctl/max_cpus"
+					}},'
+				fi
+				if [ -f "/sys/devices/system/cpu/cpu4/core_ctl/busy_down_thres" ]; then
+						$BB echo '{ SGeneric:{
+							title:"Busy Down Thresold",
+							description:"",
+							default:'cat /sys/devices/system/cpu/cpu4/core_ctl/busy_down_thres',
+							action:"generic /sys/devices/system/cpu/cpu4/core_ctl/busy_down_thres"
+						}},'
+				fi
+				if [ -f "/sys/devices/system/cpu/cpu4/core_ctl/busy_up_thres" ]; then
+						$BB echo '{ SGeneric:{
+							title:"Busy Up Thresold",
+							description:"",
+							default:'cat /sys/devices/system/cpu/cpu4/core_ctl/busy_up_thres',
+							action:"generic /sys/devices/system/cpu/cpu4/core_ctl/busy_up_thres"
+						}},'
+				fi
+				if [ -f "/sys/devices/system/cpu/cpu4/core_ctl/task_thres" ]; then
+						$BB echo '{ SGeneric:{
+							title:"Task Thresold",
+							description:"",
+							default:'cat /sys/devices/system/cpu/cpu4/core_ctl/task_thres',
+							action:"generic /sys/devices/system/cpu/cpu4/core_ctl/task_thres"
+						}},'
+				fi
+				if [ -f "/sys/devices/system/cpu/cpu4/core_ctl/offline_delay_ms" ]; then
+				OFFDMS=\`$BB cat /sys/devices/system/cpu/cpu4/core_ctl/offline_delay_ms\`
+					$BB echo '{ SSeekBar:{
+							title:"Offline Delay",
+							description:"",
+							min:0,
+							max:1000,
+							step:1,
+							unit:" ms",
+							default:'$OFFDMS',
+							action:"generic /sys/devices/system/cpu/cpu4/core_ctl/offline_delay_ms",
+					}},'
+				fi
+				if [ -f "/sys/devices/system/cpu/cpu4/core_ctl/hc_on" ]; then
+				HCON=\`$BB cat /sys/devices/system/cpu/cpu4/core_ctl/hc_on\`
+						$BB echo '{ SCheckBox:{
+							label:"HC On",
+							description:"",
+							default:'$HCON',
+							action:"generic /sys/devices/system/cpu/cpu4/core_ctl/hc_on"
+						}},'
+				fi
+				if [ -f "/sys/devices/system/cpu/cpu4/core_ctl/hc_ro_use_gourd" ]; then
+				HROG=\`$BB cat /sys/devices/system/cpu/cpu4/core_ctl/hc_ro_use_gourd\`
+						$BB echo '{ SCheckBox:{
+							label:"HC Use Gourd",
+							description:"",
+							default:'$HROG',
+							action:"generic /sys/devices/system/cpu/cpu4/core_ctl/hc_ro_use_gourd"
+						}},'
+				fi
+				if [ -f "/sys/devices/system/cpu/cpu4/core_ctl/hc_thres_on" ]; then
+				HTON=\`$BB cat /sys/devices/system/cpu/cpu4/core_ctl/hc_thres_on\`
+						$BB echo '{ SCheckBox:{
+							label:"HC Thresold On",
+							description:"",
+							default:'$HTON',
+							action:"generic /sys/devices/system/cpu/cpu4/core_ctl/hc_thres_on"
+						}},'
+				fi
+				if [ -f "/sys/devices/system/cpu/cpu4/core_ctl/hc_down_scale_on" ]; then
+				HDON=\`$BB cat /sys/devices/system/cpu/cpu4/core_ctl/hc_down_scale_on\`
+						$BB echo '{ SCheckBox:{
+							label:"HC Down Scale On",
+							description:"",
+							default:'$HDON',
+							action:"generic /sys/devices/system/cpu/cpu4/core_ctl/hc_down_scale_on"
+						}},'
+				fi
+				if [ -f "/sys/devices/system/cpu/cpu4/core_ctl/hc_ro_interval" ]; then
+				HROI=\`$BB cat /sys/devices/system/cpu/cpu4/core_ctl/hc_ro_interval\`
+						$BB echo '{ SSeekBar:{
+							title:"HC Ro Interval",
+							description:"",
+							min:0,
+							max:10000,
+							step:1,
+							unit:" ms",
+							default:'$HROI',
+							action:"generic /sys/devices/system/cpu/cpu4/core_ctl/hc_ro_interval",
+						}},'
+				fi
+				if [ -f "/sys/devices/system/cpu/cpu4/core_ctl/hc_correl_lvs" ]; then
+						$BB echo '{ SGeneric:{
+							title:"HC Correlated Levels",
+							description:"",
+							default:'cat /sys/devices/system/cpu/cpu4/core_ctl/hc_correl_lvs',
+							action:"generic /sys/devices/system/cpu/cpu4/core_ctl/hc_correl_lvs"
+						}},'
+				fi
+				if [ -f "/sys/devices/system/cpu/cpu4/core_ctl/hc_correl_use_pcost" ]; then
+						$BB echo '{ SGeneric:{
+							title:"HC Correlated Use Pcost",
+							description:"",
+							default:'cat /sys/devices/system/cpu/cpu4/core_ctl/hc_correl_use_pcost',
+							action:"generic /sys/devices/system/cpu/cpu4/core_ctl/hc_correl_use_pcost"
 						}},'
 				fi
 				$BB echo '{ SSpacer:{

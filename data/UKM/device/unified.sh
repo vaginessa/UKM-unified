@@ -1185,4 +1185,24 @@ case "$1" in
 	LiveMsmPerformance)
 			$BB echo "MSM Performance Driver"
 	;;
+	LiveCpuCluster)
+	
+	CPUCLST=/sys/module/clock_cpu_8996;
+	
+		if [ -d "$CPUCLST" ]; then
+			$BB echo "KYRO 1.6 Cluster"
+		else
+			$BB echo "A53 Cluster"
+		fi;
+	;;
+	LiveCpuCluster1)
+	
+	CPUCLST=/sys/module/clock_cpu_8996;
+	
+		if [ -d "$CPUCLST" ]; then
+			$BB echo "KYRO 2.2 Cluster"
+		else
+			$BB echo "A57 Cluster"
+		fi;
+	;;
 esac;
