@@ -1,6 +1,13 @@
 /
 P/oject name: UKM-unified
 
+08/06/17
+
+  * Info: update links (Slawek) [ab65148]
+  * Cpuboost: Add variables for kryo based devices and correct support of  other devices (Slawek) [5350aa7]
+  * UKM: tidy up and merge most kryo into normal cpu tabs (Slawek) [15fce75]
+  * UKM: change to update-binary instead of script - based on Anykernel2 by osm0sis (Slawek) [3e9b4cb]
+
 23/03/17
 
   * hotplug: msm performance adjust and add disable knob (Slawek) [67a0692]
