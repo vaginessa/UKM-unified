@@ -1,6 +1,13 @@
 /
 P/oject name: UKM-unified
 
+18/07/17
+
+  * misc: Fix state notifier (Slawek) [83dc179]
+  * Cpu: Add simple on/off control over the cpus (Slawek) [35bc203]
+  * Fixes (Slawek) [236af7a]
+  * device: fix gpu freq sliders not showing in msm8996 devices (Slawek) [eee4884]
+
 08/06/17
 
   * Info: update links (Slawek) [ab65148]
