@@ -571,6 +571,14 @@ cat << CTAG
 						action:"boolean /sys/module/mdss_fb/parameters/backlight_dimmer"
 					}},'
 				fi
+				if [ -f "/sys/devices/virtual/graphics/fb0/dci_p3" ]; then
+				DCI=\`$BB cat /sys/devices/virtual/graphics/fb0/dci_p3\`;
+					$BB echo '{ SCheckBox:{
+						label:"DCI-P3 mode for one plus 3t",
+						default:'$DCI',
+						action:"generic /sys/devices/virtual/graphics/fb0/dci_p3"
+					}},'
+				fi
 			fi`
 		]
 }
