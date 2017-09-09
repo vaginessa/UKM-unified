@@ -547,6 +547,18 @@ cat << CTAG
 							action:"generic /sys/devices/virtual/graphics/fb0/cabc"
 						}},'
 				fi
+				if [ -f "/sys/module/mdss_fb/parameters/backlight_min" ]; then
+				BMIN=\`$BB cat /sys/module/mdss_fb/parameters/backlight_min\`
+						$BB echo '{ SSeekBar:{
+							title:"Backlight Control",
+							description:"Minimum Backlight Level Control - Developed by Lord Boeffla",
+							min:0,
+							max:255,
+							step:1,
+							default:'$BMIN',
+							action:"generic /sys/module/mdss_fb/parameters/backlight_min"
+						}},'
+				fi
 				if [ -f "/sys/devices/virtual/graphics/fb0/color_enhance" ]; then
 				CE=\`$BB cat /sys/devices/virtual/graphics/fb0/color_enhance\`;
 					$BB echo '{ SCheckBox:{
