@@ -36,6 +36,18 @@ cat << CTAG
 					}
 				]
 			}},
+			`if [ -f "/sys/devices/virtual/graphics/fb0/dci_p3" ]; then
+			FSYNC=\`$BB cat /sys/devices/virtual/graphics/fb0/dci_p3\`
+				$BB echo '{ SPane:{
+					title:"DCI P3 Mode"
+				}},
+					{ SCheckBox:{
+						description:"Oneplus 3t DCI_P3 Display Calibration",
+						label:"Enable",
+						default:'$FSYNC',
+						action:"generic /sys/devices/virtual/graphics/fb0/dci_p3"
+					}},'
+			fi`
 			`if [ -d "/sys/devices/platform/kcal_ctrl.0" ]; then
 				if [ -f "/sys/devices/platform/kcal_ctrl.0/kcal" ]; then
 				KCAL=\`$BB cat /sys/devices/platform/kcal_ctrl.0/kcal\`;
@@ -551,12 +563,24 @@ cat << CTAG
 				BMIN=\`$BB cat /sys/module/mdss_fb/parameters/backlight_min\`
 						$BB echo '{ SSeekBar:{
 							title:"Backlight Control",
-							description:"Minimum Backlight Level Control - Developed by Lord Boeffla",
+							description:"Minimum Backlight Level - Developed by Lord Boeffla",
 							min:0,
 							max:255,
 							step:1,
 							default:'$BMIN',
 							action:"generic /sys/module/mdss_fb/parameters/backlight_min"
+						}},'
+				fi
+				if [ -f "/sys/module/mdss_fb/parameters/backlight_max" ]; then
+				BMAX=\`$BB cat /sys/module/mdss_fb/parameters/backlight_max\`
+						$BB echo '{ SSeekBar:{
+							title:"Backlight Control",
+							description:"Maximum Backlight Level - Developed by Lord Boeffla",
+							min:0,
+							max:255,
+							step:1,
+							default:'$BMAX',
+							action:"generic /sys/module/mdss_fb/parameters/backlight_max"
 						}},'
 				fi
 				if [ -f "/sys/devices/virtual/graphics/fb0/color_enhance" ]; then
@@ -575,22 +599,18 @@ cat << CTAG
 						action:"generic /sys/devices/virtual/graphics/fb0/aco"
 					}},'
 				fi
-				if [ -f "/sys/module/mdss_fb/parameters/backlight_dimmer"  ]; then
-				BLD=\`bool /sys/module/mdss_fb/parameters/backlight_dimmer\`;
-					$BB echo '{ SCheckBox:{
-						label:"Backlight Dimmer Enabled",
-						default:'$BLD',
+			fi`
+			`if [ -f "/sys/module/mdss_fb/parameters/backlight_dimmer" ]; then
+			MHH=\`bool /sys/module/mdss_fb/parameters/backlight_dimmer\`;
+				$BB echo '{ SPane:{
+					title:"Backlight Dimmer",
+				}},
+					{ SCheckBox:{
+						label:"Enable",
+						description:"Enable/Disable backlight dimmer.",
+						default:'$MHH',
 						action:"boolean /sys/module/mdss_fb/parameters/backlight_dimmer"
 					}},'
-				fi
-				if [ -f "/sys/devices/virtual/graphics/fb0/dci_p3" ]; then
-				DCI=\`$BB cat /sys/devices/virtual/graphics/fb0/dci_p3\`;
-					$BB echo '{ SCheckBox:{
-						label:"DCI-P3 mode for one plus 3t",
-						default:'$DCI',
-						action:"generic /sys/devices/virtual/graphics/fb0/dci_p3"
-					}},'
-				fi
 			fi`
 		]
 }
