@@ -1,6 +1,16 @@
 /
 P/oject name: UKM-unified
 
+22/09/17
+
+  * cpu: update amount of cores detection (Slawek) [1007384]
+  * update readme (Slawek) [154862d]
+  * misc: fix enable toggles (Slawek) [fb4b998]
+  * gamma: add support for Boeffla brightnes control (Slawek) [37720e0]
+  * gamma: add support for Minimum Backlight level By Lord Boeffla (Slawek) [4fcb676]
+  * gamma: add Oneplus 3T DCI Switch (Slawek) [c84421c]
+
+
 18/07/17
 
   * misc: Fix state notifier (Slawek) [83dc179]
